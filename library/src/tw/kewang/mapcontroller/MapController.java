@@ -38,15 +38,11 @@ public class MapController {
 	 * @param context
 	 * @param map
 	 */
-	public static void attach(Context context, GoogleMap map) {
+	public static void attach(Context context, GoogleMap map)
+			throws GooglePlayServicesNotAvailableException {
+		MapsInitializer.initialize(context);
+
 		MapController.context = context;
-
-		try {
-			MapsInitializer.initialize(context);
-		} catch (GooglePlayServicesNotAvailableException e) {
-			e.printStackTrace();
-		}
-
 		MapController.map = map;
 	}
 
