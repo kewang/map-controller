@@ -33,7 +33,7 @@ public class MapController {
 	private static OnMyLocationChangeListener mlListener;
 
 	/**
-	 * attach and initialize Google Map
+	 * attach and initialize Google Maps
 	 * 
 	 * @param context
 	 * @param map
@@ -48,6 +48,17 @@ public class MapController {
 		}
 
 		MapController.map = map;
+	}
+
+	/**
+	 * detach Google Maps
+	 */
+	public static void detach() {
+		context = null;
+		map = null;
+		markers = null;
+		ccListener = null;
+		mlListener = null;
 	}
 
 	/**
