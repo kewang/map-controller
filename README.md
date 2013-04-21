@@ -8,12 +8,26 @@ You must know to set up your Maps v2 from [official article](https://developers.
 
 ### Attach & Detach
 
-At first, you must attach map and context to controller at onCreate life cycle.
+At first, you must attach map and context to controller at onCreate.
 
 ```java
-try {
-	MapController.attach(this, mv.getMap());
-} catch (GooglePlayServicesNotAvailableException e) {
-	e.printStackTrace();
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+	try {
+		MapController.attach(this, mv.getMap());
+	} catch (GooglePlayServicesNotAvailableException e) {
+		e.printStackTrace();
+	}
+}
+```
+
+And onDestroy detach map and associate variable.
+
+```java
+@Override
+protected void onDestroy() {
+	MapController.detach();
+
+	super.onDestroy();
 }
 ```
