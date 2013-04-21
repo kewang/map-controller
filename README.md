@@ -11,9 +11,9 @@ You must know to set up your Maps v2 from [official article](https://developers.
 At first, you must attach map and context to controller at onCreate life cycle.
 
 ```java
-		try {
-			MapController.attach(this, mv.getMap());
-		} catch (GooglePlayServicesNotAvailableException e) {
-			e.printStackTrace();
-		}
+try {
+	MapController.attach(this, mv.getMap());
+} catch (GooglePlayServicesNotAvailableException e) {
+	e.printStackTrace();
+}
 ```
