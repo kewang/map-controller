@@ -34,4 +34,4 @@ protected void onDestroy() {
 
 ### Show my location
 
-Typically you can use `MapController.moveToMyLocation(false)` to show your location at onCreate.
+Typically, you can use `MapController.moveToMyLocation(false)` to show your location at onCreate.
