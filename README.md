@@ -35,3 +35,17 @@ protected void onDestroy() {
 ### Show my location
 
 Typically, you can use `MapController.moveToMyLocation(false)` to show your location at onCreate.
+
+### Tracking my location
+
+If you want to track your location at runtime and do something. You can use `MapController.moveToMyLocation(true)` like this:
+
+```java
+MapController.moveToMyLocation(true, new MoveMyLocation() {
+	@Override
+	public void moved(GoogleMap map, Location location) {
+		Toast.makeText(TrackingMyLocation.this, location.toString(), Toast.LENGTH_SHORT).show();
+	}
+});
+```
+
