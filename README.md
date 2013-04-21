@@ -4,7 +4,7 @@ Control Google Maps v2 for Android
 
 ## Prerequisite
 
-You must know to set up your Maps v2 from [official article](https://developers.google.com/maps/documentation/android/start)
+You must know how to set up your Maps v2 from [official article](https://developers.google.com/maps/documentation/android/start)
 
 ### Attach & Detach
 
@@ -31,3 +31,7 @@ protected void onDestroy() {
 	super.onDestroy();
 }
 ```
+
+### Show my location
+
+Typically you can use `MapController.moveToMyLocation(false)` to show your location at onCreate.
