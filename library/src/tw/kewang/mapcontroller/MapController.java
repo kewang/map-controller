@@ -71,7 +71,7 @@ public class MapController {
 			mlListener = new OnMyLocationChangeListener() {
 				@Override
 				public void onMyLocationChange(Location location) {
-					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+					map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(
 							location.getLatitude(), location.getLongitude())));
 
 					if (!tracking) {
@@ -96,6 +96,47 @@ public class MapController {
 	 */
 	public static void moveToMyLocation(boolean tracking) {
 		moveToMyLocation(tracking, null);
+	}
+
+	/**
+	 * move to my current location
+	 * 
+	 * @param tracking
+	 * @param callback
+	 */
+	public static void animateToMyLocation(final boolean tracking,
+			final MoveMyLocation callback) {
+		showMyLocation();
+
+		if (mlListener == null) {
+			mlListener = new OnMyLocationChangeListener() {
+				@Override
+				public void onMyLocationChange(Location location) {
+					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+							location.getLatitude(), location.getLongitude())));
+
+					if (!tracking) {
+						mlListener = null;
+						map.setOnMyLocationChangeListener(null);
+					}
+
+					if (callback != null) {
+						callback.moved(map, location);
+					}
+				}
+			};
+		}
+
+		map.setOnMyLocationChangeListener(mlListener);
+	}
+
+	/**
+	 * move to my current location
+	 * 
+	 * @param tracking
+	 */
+	public static void animateToMyLocation(boolean tracking) {
+		animateToMyLocation(tracking, null);
 	}
 
 	/**
