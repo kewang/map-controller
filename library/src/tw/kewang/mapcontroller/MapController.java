@@ -104,6 +104,10 @@ public class MapController {
 	 * @return
 	 */
 	public static Location getMyLocation() {
+		if (!map.isMyLocationEnabled()) {
+			map.setMyLocationEnabled(true);
+		}
+
 		return map.getMyLocation();
 	}
 
