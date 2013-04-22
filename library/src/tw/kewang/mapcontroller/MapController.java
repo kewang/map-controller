@@ -99,6 +99,15 @@ public class MapController {
 	}
 
 	/**
+	 * return my current location
+	 * 
+	 * @return
+	 */
+	public static Location getMyLocation() {
+		return map.getMyLocation();
+	}
+
+	/**
 	 * animate to specific latlng
 	 * 
 	 * @param latLng
