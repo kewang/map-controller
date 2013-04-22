@@ -4,7 +4,13 @@ Control Google Maps v2 for Android
 
 ## Prerequisite
 
-You must know how to set up your Maps v2 from [official article](https://developers.google.com/maps/documentation/android/start)
+You must know how to set up your Maps v2 from [official article](https://developers.google.com/maps/documentation/android/start).
+
+## Set up library
+
+Because the library project always contains the newest official library project, you just only import the library project to your Android project.
+
+## How to use
 
 ### Attach & Detach
 
@@ -32,9 +38,17 @@ protected void onDestroy() {
 }
 ```
 
+### Move to my location
+
+You can use `MapController.moveToMyLocation(false)` to move your current location.
+
 ### Show my location
 
-Typically, you can use `MapController.moveToMyLocation(false)` to show your location at onCreate.
+Typically, you can use `MapController.showMyLocation()` to show your location at onCreate.
+
+### Get my location
+
+You can use `MapController.getMyLocation()` to get your current location.
 
 ### Tracking my location
 
