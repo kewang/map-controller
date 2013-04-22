@@ -58,14 +58,14 @@ public class MapController {
 	}
 
 	/**
-	 * move to my location
+	 * move to my current location
 	 * 
 	 * @param tracking
 	 * @param callback
 	 */
 	public static void moveToMyLocation(final boolean tracking,
 			final MoveMyLocation callback) {
-		map.setMyLocationEnabled(true);
+		showMyLocation();
 
 		if (mlListener == null) {
 			mlListener = new OnMyLocationChangeListener() {
@@ -90,7 +90,7 @@ public class MapController {
 	}
 
 	/**
-	 * move to my location
+	 * move to my current location
 	 * 
 	 * @param tracking
 	 */
@@ -105,10 +105,17 @@ public class MapController {
 	 */
 	public static Location getMyLocation() {
 		if (!map.isMyLocationEnabled()) {
-			map.setMyLocationEnabled(true);
+			showMyLocation();
 		}
 
 		return map.getMyLocation();
+	}
+
+	/**
+	 * show my current location
+	 */
+	public static void showMyLocation() {
+		map.setMyLocationEnabled(true);
 	}
 
 	/**
