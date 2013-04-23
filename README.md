@@ -65,7 +65,7 @@ MapController.moveToMyLocation(true, new MoveMyLocation() {
 
 ### Move to specific location
 
-If you want to move to specific location, you can use `MapController.moveTo` or `MapController.animateTo` like this:
+If you want to move to specific location, you can use `MapController.moveTo(LatLng)` or `MapController.animateTo(LatLng)` like this:
 
 ```java
 LatLng latLng = new LatLng(25.03338, 121.56463);
@@ -78,3 +78,19 @@ MapController.animateTo(latLng, new Move() {
 });
 ```
 
+### Add marker
+
+You can use `MapController.add(MarkerOptions)` to add marker to map, like this:
+
+```java
+MapController.add(opts, new MarkerAdd() {
+	@Override
+	public void markerAdded(GoogleMap map, Marker marker) {
+		Toast.makeText(AddMarker.this, marker.getId(), Toast.LENGTH_SHORT).show();
+	}
+});
+```
+
+### Add bulk markers
+
+You can also use `MapController.addAll(ArrayList<MarkerOptions>)` to add bulk markers to map.
