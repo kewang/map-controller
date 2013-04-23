@@ -160,7 +160,7 @@ public class MapController {
 	}
 
 	/**
-	 * animate to specific latlng
+	 * animate to specific location
 	 * 
 	 * @param latLng
 	 * @param callback
@@ -187,7 +187,7 @@ public class MapController {
 	}
 
 	/**
-	 * animate to specific latlng
+	 * animate to specific location
 	 * 
 	 * @param latLng
 	 */
@@ -196,7 +196,28 @@ public class MapController {
 	}
 
 	/**
-	 * move to specific latlng
+	 * animate to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param callback
+	 */
+	public static void animateTo(double lat, double lng, Move callback) {
+		animateTo(new LatLng(lat, lng), callback);
+	}
+
+	/**
+	 * animate to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 */
+	public static void animateTo(double lat, double lng) {
+		animateTo(new LatLng(lat, lng), null);
+	}
+
+	/**
+	 * move to specific location
 	 * 
 	 * @param latLng
 	 * @param callback
@@ -223,12 +244,33 @@ public class MapController {
 	}
 
 	/**
-	 * move to specific latlng
+	 * move to specific location
 	 * 
 	 * @param latLng
 	 */
 	public static void moveTo(LatLng latLng) {
 		moveTo(latLng, null);
+	}
+
+	/**
+	 * move to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param callback
+	 */
+	public static void moveTo(double lat, double lng, Move callback) {
+		moveTo(new LatLng(lat, lng), callback);
+	}
+
+	/**
+	 * move to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 */
+	public static void moveTo(double lat, double lng) {
+		moveTo(new LatLng(lat, lng), null);
 	}
 
 	/**
@@ -326,6 +368,38 @@ public class MapController {
 	 */
 	public static void add(MarkerOptions opts) {
 		add(opts, null);
+	}
+
+	/**
+	 * add all markers to map
+	 * 
+	 * @param allOpts
+	 * @param callback
+	 */
+	public static void addAll(ArrayList<MarkerOptions> allOpts,
+			MarkerAdd callback) {
+		if (markers == null) {
+			markers = new ArrayList<Marker>();
+		}
+
+		for (MarkerOptions opts : allOpts) {
+			Marker marker = map.addMarker(opts);
+
+			markers.add(marker);
+
+			if (callback != null) {
+				callback.markerAdded(map, marker);
+			}
+		}
+	}
+
+	/**
+	 * add all markers to map
+	 * 
+	 * @param allOpts
+	 */
+	public static void addAll(ArrayList<MarkerOptions> allOpts) {
+		addAll(allOpts, null);
 	}
 
 	/**

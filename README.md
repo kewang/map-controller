@@ -38,13 +38,13 @@ protected void onDestroy() {
 }
 ```
 
-### Move to my location
-
-You can use `MapController.moveToMyLocation(false)` to move your current location. Also you can use `MapController.animateToMyLocation(false)` to move smoothly.
-
 ### Show my location
 
 Typically, you can use `MapController.showMyLocation()` to show your location at onCreate.
+
+### Move to my location
+
+You can use `MapController.moveToMyLocation(false)` to move your current location. Also you can use `MapController.animateToMyLocation(false)` to move smoothly.
 
 ### Get my location
 
