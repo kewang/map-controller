@@ -40,7 +40,7 @@ protected void onDestroy() {
 
 ### Move to my location
 
-You can use `MapController.moveToMyLocation(false)` to move your current location.
+You can use `MapController.moveToMyLocation(false)` to move your current location. Also you can use `MapController.animateToMyLocation(false)` to move smoothly.
 
 ### Show my location
 
@@ -59,6 +59,19 @@ MapController.moveToMyLocation(true, new MoveMyLocation() {
 	@Override
 	public void moved(GoogleMap map, Location location) {
 		Toast.makeText(TrackingMyLocation.this, location.toString(), Toast.LENGTH_SHORT).show();
+	}
+});
+```
+
+### Move to specific location
+
+If you want to move to specific location, you can use `MapController.moveTo` or `MapController.animateTo` like this:
+
+```java
+MapController.animateTo(latLng, new Move() {
+	@Override
+	public void moved(GoogleMap map, CameraPosition position) {
+		Toast.makeText(ShowSpecificLocation.this, position.toString(), Toast.LENGTH_SHORT).show();
 	}
 });
 ```
