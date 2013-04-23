@@ -68,6 +68,8 @@ MapController.moveToMyLocation(true, new MoveMyLocation() {
 If you want to move to specific location, you can use `MapController.moveTo` or `MapController.animateTo` like this:
 
 ```java
+LatLng latLng = new LatLng(25.03338, 121.56463);
+
 MapController.animateTo(latLng, new Move() {
 	@Override
 	public void moved(GoogleMap map, CameraPosition position) {
