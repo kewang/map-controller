@@ -64,7 +64,7 @@ public class MapController {
 	 * @param callback
 	 */
 	public static void moveToMyLocation(final boolean tracking,
-			final MoveMyLocation callback) {
+			final ChangeMyLocation callback) {
 		showMyLocation();
 
 		if (mlListener == null) {
@@ -80,7 +80,7 @@ public class MapController {
 					}
 
 					if (callback != null) {
-						callback.moved(map, location);
+						callback.changed(map, location);
 					}
 				}
 			};
@@ -105,7 +105,7 @@ public class MapController {
 	 * @param callback
 	 */
 	public static void animateToMyLocation(final boolean tracking,
-			final MoveMyLocation callback) {
+			final ChangeMyLocation callback) {
 		showMyLocation();
 
 		if (mlListener == null) {
@@ -121,7 +121,7 @@ public class MapController {
 					}
 
 					if (callback != null) {
-						callback.moved(map, location);
+						callback.changed(map, location);
 					}
 				}
 			};
@@ -163,9 +163,11 @@ public class MapController {
 	 * animate to specific location
 	 * 
 	 * @param latLng
+	 * @param zoom
 	 * @param callback
 	 */
-	public static void animateTo(LatLng latLng, final Move callback) {
+	public static void animateTo(LatLng latLng, int zoom,
+			final ChangePosition callback) {
 		if (ccListener == null) {
 			ccListener = new OnCameraChangeListener() {
 				@Override
@@ -175,7 +177,7 @@ public class MapController {
 					ccListener = null;
 
 					if (callback != null) {
-						callback.moved(map, position);
+						callback.changed(map, position);
 					}
 				}
 			};
@@ -183,7 +185,7 @@ public class MapController {
 			map.setOnCameraChangeListener(ccListener);
 		}
 
-		map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+		map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 	}
 
 	/**
@@ -192,7 +194,17 @@ public class MapController {
 	 * @param latLng
 	 */
 	public static void animateTo(LatLng latLng) {
-		animateTo(latLng, null);
+		animateTo(latLng, (int) map.getCameraPosition().zoom, null);
+	}
+
+	/**
+	 * animate to specific location
+	 * 
+	 * @param latLng
+	 * @param callback
+	 */
+	public static void animateTo(LatLng latLng, ChangePosition callback) {
+		animateTo(latLng, (int) map.getCameraPosition().zoom, callback);
 	}
 
 	/**
@@ -202,8 +214,9 @@ public class MapController {
 	 * @param lng
 	 * @param callback
 	 */
-	public static void animateTo(double lat, double lng, Move callback) {
-		animateTo(new LatLng(lat, lng), callback);
+	public static void animateTo(double lat, double lng, ChangePosition callback) {
+		animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
+				callback);
 	}
 
 	/**
@@ -213,7 +226,42 @@ public class MapController {
 	 * @param lng
 	 */
 	public static void animateTo(double lat, double lng) {
-		animateTo(new LatLng(lat, lng), null);
+		animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
+				null);
+	}
+
+	/**
+	 * animate and zoom to specific location
+	 * 
+	 * @param latLng
+	 * @param zoom
+	 */
+	public static void animateTo(LatLng latLng, int zoom) {
+		animateTo(latLng, zoom, null);
+	}
+
+	/**
+	 * animate and zoom to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param zoom
+	 */
+	public static void animateTo(double lat, double lng, int zoom) {
+		animateTo(new LatLng(lat, lng), zoom, null);
+	}
+
+	/**
+	 * animate and zoom to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param zoom
+	 * @param callback
+	 */
+	public static void animateTo(double lat, double lng, int zoom,
+			ChangePosition callback) {
+		animateTo(new LatLng(lat, lng), zoom, callback);
 	}
 
 	/**
@@ -222,7 +270,8 @@ public class MapController {
 	 * @param latLng
 	 * @param callback
 	 */
-	public static void moveTo(LatLng latLng, final Move callback) {
+	public static void moveTo(LatLng latLng, int zoom,
+			final ChangePosition callback) {
 		if (ccListener == null) {
 			ccListener = new OnCameraChangeListener() {
 				@Override
@@ -232,7 +281,7 @@ public class MapController {
 					ccListener = null;
 
 					if (callback != null) {
-						callback.moved(map, position);
+						callback.changed(map, position);
 					}
 				}
 			};
@@ -240,7 +289,7 @@ public class MapController {
 			map.setOnCameraChangeListener(ccListener);
 		}
 
-		map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 	}
 
 	/**
@@ -249,7 +298,17 @@ public class MapController {
 	 * @param latLng
 	 */
 	public static void moveTo(LatLng latLng) {
-		moveTo(latLng, null);
+		moveTo(latLng, (int) map.getCameraPosition().zoom, null);
+	}
+
+	/**
+	 * move to specific location
+	 * 
+	 * @param latLng
+	 * @param callback
+	 */
+	public static void moveTo(LatLng latLng, ChangePosition callback) {
+		moveTo(latLng, (int) map.getCameraPosition().zoom, callback);
 	}
 
 	/**
@@ -259,8 +318,9 @@ public class MapController {
 	 * @param lng
 	 * @param callback
 	 */
-	public static void moveTo(double lat, double lng, Move callback) {
-		moveTo(new LatLng(lat, lng), callback);
+	public static void moveTo(double lat, double lng, ChangePosition callback) {
+		moveTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
+				callback);
 	}
 
 	/**
@@ -270,7 +330,67 @@ public class MapController {
 	 * @param lng
 	 */
 	public static void moveTo(double lat, double lng) {
-		moveTo(new LatLng(lat, lng), null);
+		moveTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom, null);
+	}
+
+	/**
+	 * move and zoom to specific location
+	 * 
+	 * @param latLng
+	 * @param zoom
+	 */
+	public static void moveTo(LatLng latLng, int zoom) {
+		moveTo(latLng, zoom, null);
+	}
+
+	/**
+	 * move and zoom to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param zoom
+	 */
+	public static void moveTo(double lat, double lng, int zoom) {
+		moveTo(new LatLng(lat, lng), zoom, null);
+	}
+
+	/**
+	 * move and zoom to specific location
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param zoom
+	 * @param callback
+	 */
+	public static void moveTo(double lat, double lng, int zoom,
+			ChangePosition callback) {
+		moveTo(new LatLng(lat, lng), zoom, callback);
+	}
+
+	/**
+	 * zoom map
+	 * 
+	 * @param smooth
+	 * @param zoom
+	 */
+	public static void zoomTo(boolean smooth, int zoom) {
+		zoomTo(smooth, zoom, null);
+	}
+
+	/**
+	 * zoom map
+	 * 
+	 * @param smooth
+	 * @param zoom
+	 * @param callback
+	 */
+	public static void zoomTo(boolean smooth, int zoom,
+			final ChangePosition callback) {
+		if (smooth) {
+			animateTo(map.getCameraPosition().target, zoom, callback);
+		} else {
+			moveTo(map.getCameraPosition().target, zoom, callback);
+		}
 	}
 
 	/**
@@ -431,15 +551,6 @@ public class MapController {
 	}
 
 	/**
-	 * zoom map
-	 * 
-	 * @param zoom
-	 */
-	public static void zoom(int zoom) {
-		map.animateCamera(CameraUpdateFactory.zoomTo(zoom));
-	}
-
-	/**
 	 * find specific location
 	 * 
 	 * @param location
@@ -545,12 +656,12 @@ public class MapController {
 		}
 	}
 
-	public interface MoveMyLocation {
-		public void moved(GoogleMap map, Location location);
+	public interface ChangeMyLocation {
+		public void changed(GoogleMap map, Location location);
 	}
 
-	public interface Move {
-		public void moved(GoogleMap map, CameraPosition position);
+	public interface ChangePosition {
+		public void changed(GoogleMap map, CameraPosition position);
 	}
 
 	public interface MapClick {
