@@ -377,8 +377,7 @@ public class MapController {
 	 * @param zoom
 	 * @param callback
 	 */
-	public static void zoomTo(boolean smooth, int zoom,
-			final ChangePosition callback) {
+	public static void zoomTo(boolean smooth, int zoom, ChangePosition callback) {
 		if (smooth) {
 			animateTo(map.getCameraPosition().target, zoom, callback);
 		} else {
