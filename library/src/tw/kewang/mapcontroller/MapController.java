@@ -25,6 +25,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * @author kewang
+ */
 public class MapController {
 	private static Context context;
 	private static GoogleMap map;
@@ -372,16 +375,6 @@ public class MapController {
 	 * 
 	 * @param smooth
 	 * @param zoom
-	 */
-	public static void zoomTo(boolean smooth, int zoom) {
-		zoomTo(smooth, zoom, null);
-	}
-
-	/**
-	 * zoom map
-	 * 
-	 * @param smooth
-	 * @param zoom
 	 * @param callback
 	 */
 	public static void zoomTo(boolean smooth, int zoom,
@@ -391,6 +384,35 @@ public class MapController {
 		} else {
 			moveTo(map.getCameraPosition().target, zoom, callback);
 		}
+	}
+
+	/**
+	 * zoom map
+	 * 
+	 * @param zoom
+	 */
+	public static void zoomTo(int zoom) {
+		zoomTo(true, zoom, null);
+	}
+
+	/**
+	 * zoom map
+	 * 
+	 * @param zoom
+	 * @param callback
+	 */
+	public static void zoomTo(int zoom, ChangePosition callback) {
+		zoomTo(true, zoom, callback);
+	}
+
+	/**
+	 * zoom map
+	 * 
+	 * @param smooth
+	 * @param zoom
+	 */
+	public static void zoomTo(boolean smooth, int zoom) {
+		zoomTo(smooth, zoom, null);
 	}
 
 	/**
@@ -467,7 +489,7 @@ public class MapController {
 	 * @param opts
 	 * @param callback
 	 */
-	public static void add(MarkerOptions opts, MarkerAdd callback) {
+	public static void addMarker(MarkerOptions opts, MarkerAdd callback) {
 		Marker marker = map.addMarker(opts);
 
 		if (markers == null) {
@@ -486,8 +508,94 @@ public class MapController {
 	 * 
 	 * @param opts
 	 */
-	public static void add(MarkerOptions opts) {
-		add(opts, null);
+	public static void addMarker(MarkerOptions opts) {
+		addMarker(opts, null);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param latLng
+	 * @param opts
+	 */
+	public static void addMarker(LatLng latLng, MarkerOptions opts) {
+		addMarker(opts.position(latLng), null);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param opts
+	 */
+	public static void addMarker(double lat, double lng, MarkerOptions opts) {
+		addMarker(opts.position(new LatLng(lat, lng)), null);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param latLng
+	 */
+	public static void addMarker(LatLng latLng) {
+		addMarker(new MarkerOptions().position(latLng), null);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param lat
+	 * @param lng
+	 */
+	public static void addMarker(double lat, double lng) {
+		addMarker(new MarkerOptions().position(new LatLng(lat, lng)), null);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param latLng
+	 * @param opts
+	 * @param callback
+	 */
+	public static void addMarker(LatLng latLng, MarkerOptions opts,
+			MarkerAdd callback) {
+		addMarker(opts.position(latLng), callback);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param opts
+	 * @param callback
+	 */
+	public static void addMarker(double lat, double lng, MarkerOptions opts,
+			MarkerAdd callback) {
+		addMarker(opts.position(new LatLng(lat, lng)), callback);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param latLng
+	 * @param callback
+	 */
+	public static void addMarker(LatLng latLng, MarkerAdd callback) {
+		addMarker(new MarkerOptions().position(latLng), callback);
+	}
+
+	/**
+	 * add marker to map
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param callback
+	 */
+	public static void addMarker(double lat, double lng, MarkerAdd callback) {
+		addMarker(new MarkerOptions().position(new LatLng(lat, lng)), callback);
 	}
 
 	/**
@@ -496,7 +604,7 @@ public class MapController {
 	 * @param allOpts
 	 * @param callback
 	 */
-	public static void addAll(ArrayList<MarkerOptions> allOpts,
+	public static void addMarkers(ArrayList<MarkerOptions> allOpts,
 			MarkerAdd callback) {
 		if (markers == null) {
 			markers = new ArrayList<Marker>();
@@ -518,8 +626,8 @@ public class MapController {
 	 * 
 	 * @param allOpts
 	 */
-	public static void addAll(ArrayList<MarkerOptions> allOpts) {
-		addAll(allOpts, null);
+	public static void addMarkers(ArrayList<MarkerOptions> allOpts) {
+		addMarkers(allOpts, null);
 	}
 
 	/**
@@ -527,7 +635,7 @@ public class MapController {
 	 * 
 	 * @return
 	 */
-	public static ArrayList<Marker> getAllMarkers() {
+	public static ArrayList<Marker> getMarkers() {
 		return markers;
 	}
 
@@ -544,7 +652,7 @@ public class MapController {
 	/**
 	 * clear all markers
 	 */
-	public static void clearAllMarkers() {
+	public static void clearMarkers() {
 		map.clear();
 
 		markers.clear();
@@ -648,7 +756,7 @@ public class MapController {
 				opts.title(address.toString());
 				opts.snippet(latLng.toString());
 
-				add(opts);
+				addMarker(opts);
 			}
 
 			animateTo(new LatLng(addresses.get(0).getLatitude(), addresses.get(
