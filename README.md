@@ -80,10 +80,10 @@ MapController.animateTo(latLng, new Move() {
 
 ### Add marker
 
-You can use `MapController.add(MarkerOptions)` to add marker to map, like this:
+You can use `MapController.addMarker(MarkerOptions)` to add marker to map, like this:
 
 ```java
-MapController.add(opts, new MarkerAdd() {
+MapController.addMarker(opts, new MarkerAdd() {
 	@Override
 	public void markerAdded(GoogleMap map, Marker marker) {
 		Toast.makeText(AddMarker.this, marker.getId(), Toast.LENGTH_SHORT).show();
@@ -93,4 +93,4 @@ MapController.add(opts, new MarkerAdd() {
 
 ### Add bulk markers
 
-You can also use `MapController.addAll(ArrayList<MarkerOptions>)` to add bulk markers to map.
+You can also use `MapController.addMarkers(ArrayList<MarkerOptions>)` to add bulk markers to map.
