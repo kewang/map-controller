@@ -29,6 +29,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * @author kewang
  */
 public class MapController {
+	public static enum MapType {
+		MAP_TYPE_NONE, MAP_TYPE_NORMAL, MAP_TYPE_SATELLITE, MAP_TYPE_TERRAIN, MAP_TYPE_HYBRID
+	}
+
 	private static Context context;
 	private static GoogleMap map;
 	private static ArrayList<Marker> markers;
@@ -58,6 +62,24 @@ public class MapController {
 		markers = null;
 		ccListener = null;
 		mlListener = null;
+	}
+
+	/**
+	 * return map's instance
+	 * 
+	 * @return
+	 */
+	public static GoogleMap getMap() {
+		return map;
+	}
+
+	/**
+	 * sets the type of map tiles that should be displayed
+	 * 
+	 * @param type
+	 */
+	public static void setType(MapType type) {
+		map.setMapType(type.ordinal());
 	}
 
 	/**
