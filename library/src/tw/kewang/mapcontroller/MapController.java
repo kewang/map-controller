@@ -514,6 +514,58 @@ public class MapController {
 	}
 
 	/**
+	 * zoom map in
+	 */
+	public static void zoomIn() {
+		zoomTo((int) (map.getCameraPosition().zoom + 1), true, null);
+	}
+
+	/**
+	 * zoom map in
+	 * 
+	 * @param callback
+	 */
+	public static void zoomIn(ChangePosition callback) {
+		zoomTo((int) (map.getCameraPosition().zoom + 1), true, callback);
+	}
+
+	/**
+	 * zoom map in
+	 * 
+	 * @param smooth
+	 * @param callback
+	 */
+	public static void zoomIn(boolean smooth, ChangePosition callback) {
+		zoomTo((int) (map.getCameraPosition().zoom + 1), smooth, callback);
+	}
+
+	/**
+	 * zoom map out
+	 */
+	public static void zoomOut() {
+		zoomTo((int) (map.getCameraPosition().zoom - 1), true, null);
+	}
+
+	/**
+	 * zoom map out
+	 * 
+	 * @param callback
+	 */
+	public static void zoomOut(ChangePosition callback) {
+		zoomTo((int) (map.getCameraPosition().zoom - 1), true, callback);
+	}
+
+	/**
+	 * zoom map out
+	 * 
+	 * @param smooth
+	 * @param callback
+	 */
+	public static void zoomOut(boolean smooth, ChangePosition callback) {
+		zoomTo((int) (map.getCameraPosition().zoom - 1), smooth, callback);
+	}
+
+	/**
 	 * when map is clicked
 	 * 
 	 * @param callback
