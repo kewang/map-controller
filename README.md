@@ -55,9 +55,9 @@ You can use `MapController.getMyLocation()` to get your current location.
 If you want to track your location at runtime and do something. You can use `MapController.moveToMyLocation(true)` like this:
 
 ```java
-MapController.moveToMyLocation(true, new MoveMyLocation() {
+MapController.moveToMyLocation(true, new ChangeMyLocation() {
 	@Override
-	public void moved(GoogleMap map, Location location) {
+	public void changed(GoogleMap map, Location location) {
 		Toast.makeText(TrackingMyLocation.this, location.toString(), Toast.LENGTH_SHORT).show();
 	}
 });

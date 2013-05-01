@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -393,13 +394,89 @@ public class MapController {
 	}
 
 	/**
-	 * zoom map
-	 * 
+	 * @param southwest
+	 * @param northeast
+	 * @param padding
 	 * @param smooth
-	 * @param zoom
 	 * @param callback
 	 */
-	public static void zoomTo(boolean smooth, int zoom, ChangePosition callback) {
+	public static void setBound(LatLng southwest, LatLng northeast,
+			int padding, boolean smooth, final ChangePosition callback) {
+		if (ccListener == null) {
+			ccListener = new OnCameraChangeListener() {
+				@Override
+				public void onCameraChange(CameraPosition position) {
+					map.setOnCameraChangeListener(null);
+
+					ccListener = null;
+
+					if (callback != null) {
+						callback.changed(map, position);
+					}
+				}
+			};
+
+			map.setOnCameraChangeListener(ccListener);
+		}
+
+		if (smooth) {
+			map.animateCamera(CameraUpdateFactory.newLatLngBounds(
+					new LatLngBounds(southwest, northeast), padding));
+		} else {
+			map.moveCamera(CameraUpdateFactory.newLatLngBounds(
+					new LatLngBounds(southwest, northeast), padding));
+		}
+	}
+
+	/**
+	 * @param swLat
+	 * @param swLng
+	 * @param neLat
+	 * @param neLng
+	 * @param padding
+	 * @param smooth
+	 */
+	public static void setBound(double swLat, double swLng, double neLat,
+			double neLng, int padding, boolean smooth) {
+		setBound(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
+				smooth, null);
+	}
+
+	/**
+	 * @param swLat
+	 * @param swLng
+	 * @param neLat
+	 * @param neLng
+	 * @param padding
+	 */
+	public static void setBound(double swLat, double swLng, double neLat,
+			double neLng, int padding) {
+		setBound(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
+				true, null);
+	}
+
+	/**
+	 * @param swLat
+	 * @param swLng
+	 * @param neLat
+	 * @param neLng
+	 * @param padding
+	 * @param callback
+	 */
+	public static void setBound(double swLat, double swLng, double neLat,
+			double neLng, int padding, ChangePosition callback) {
+		setBound(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
+				true, callback);
+	}
+
+	/**
+	 * zoom map
+	 * 
+	 * @param zoom
+	 * @param smooth
+	 * @param callback
+	 */
+	public static void zoomTo(int zoom, boolean smooth, ChangePosition callback) {
 		if (smooth) {
 			animateTo(map.getCameraPosition().target, zoom, callback);
 		} else {
@@ -413,7 +490,7 @@ public class MapController {
 	 * @param zoom
 	 */
 	public static void zoomTo(int zoom) {
-		zoomTo(true, zoom, null);
+		zoomTo(zoom, true, null);
 	}
 
 	/**
@@ -423,17 +500,17 @@ public class MapController {
 	 * @param callback
 	 */
 	public static void zoomTo(int zoom, ChangePosition callback) {
-		zoomTo(true, zoom, callback);
+		zoomTo(zoom, true, callback);
 	}
 
 	/**
 	 * zoom map
 	 * 
-	 * @param smooth
 	 * @param zoom
+	 * @param smooth
 	 */
-	public static void zoomTo(boolean smooth, int zoom) {
-		zoomTo(smooth, zoom, null);
+	public static void zoomTo(int zoom, boolean smooth) {
+		zoomTo(zoom, smooth, null);
 	}
 
 	/**
