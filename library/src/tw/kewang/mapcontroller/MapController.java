@@ -409,7 +409,7 @@ public class MapController {
 	 * @param smooth
 	 * @param callback
 	 */
-	public static void setBound(LatLng southwest, LatLng northeast,
+	public static void setBounds(LatLng southwest, LatLng northeast,
 			int padding, boolean smooth, final ChangePosition callback) {
 		if (ccListener == null) {
 			ccListener = new OnCameraChangeListener() {
@@ -438,6 +438,26 @@ public class MapController {
 	}
 
 	/**
+	 * @param southwest
+	 * @param northeast
+	 * @param padding
+	 * @param smooth
+	 */
+	public static void setBounds(LatLng southwest, LatLng northeast,
+			int padding, boolean smooth) {
+		setBounds(southwest, northeast, padding, smooth, null);
+	}
+
+	/**
+	 * @param southwest
+	 * @param northeast
+	 * @param padding
+	 */
+	public static void setBounds(LatLng southwest, LatLng northeast, int padding) {
+		setBounds(southwest, northeast, padding, true, null);
+	}
+
+	/**
 	 * @param swLat
 	 * @param swLng
 	 * @param neLat
@@ -445,9 +465,9 @@ public class MapController {
 	 * @param padding
 	 * @param smooth
 	 */
-	public static void setBound(double swLat, double swLng, double neLat,
+	public static void setBounds(double swLat, double swLng, double neLat,
 			double neLng, int padding, boolean smooth) {
-		setBound(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
+		setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
 				smooth, null);
 	}
 
@@ -458,9 +478,9 @@ public class MapController {
 	 * @param neLng
 	 * @param padding
 	 */
-	public static void setBound(double swLat, double swLng, double neLat,
+	public static void setBounds(double swLat, double swLng, double neLat,
 			double neLng, int padding) {
-		setBound(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
+		setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
 				true, null);
 	}
 
@@ -472,9 +492,9 @@ public class MapController {
 	 * @param padding
 	 * @param callback
 	 */
-	public static void setBound(double swLat, double swLng, double neLat,
+	public static void setBounds(double swLat, double swLng, double neLat,
 			double neLng, int padding, ChangePosition callback) {
-		setBound(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
+		setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
 				true, callback);
 	}
 
