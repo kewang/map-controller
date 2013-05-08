@@ -84,6 +84,15 @@ public class MapController {
 	}
 
 	/**
+	 * return the type of map that's currently displayed.
+	 * 
+	 * @return
+	 */
+	public static MapType getType() {
+		return MapType.valueOf(String.valueOf(map.getMapType()));
+	}
+
+	/**
 	 * move to my current location
 	 * 
 	 * @param tracking
@@ -806,6 +815,24 @@ public class MapController {
 		map.clear();
 
 		markers.clear();
+	}
+
+	/**
+	 * show traffic layer
+	 * 
+	 * @param enabled
+	 */
+	public static void showTraffic(boolean enabled) {
+		map.setTrafficEnabled(enabled);
+	}
+
+	/**
+	 * show indoor layer
+	 * 
+	 * @param enabled
+	 */
+	public static void showIndoor(boolean enabled) {
+		boolean result = map.setIndoorEnabled(enabled);
 	}
 
 	/**
