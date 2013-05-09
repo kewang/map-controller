@@ -9,13 +9,16 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.view.View;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
@@ -595,6 +598,44 @@ public class MapController {
 	}
 
 	/**
+	 * replace the default info-window
+	 * 
+	 * @param v
+	 */
+	public static void setInfoWindow(final View v) {
+		map.setInfoWindowAdapter(new InfoWindowAdapter() {
+			@Override
+			public View getInfoWindow(Marker marker) {
+				return v;
+			}
+
+			@Override
+			public View getInfoContents(Marker marker) {
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * replace the info-window contents
+	 * 
+	 * @param v
+	 */
+	public static void setInfoContents(final View v) {
+		map.setInfoWindowAdapter(new InfoWindowAdapter() {
+			@Override
+			public View getInfoWindow(Marker marker) {
+				return null;
+			}
+
+			@Override
+			public View getInfoContents(Marker marker) {
+				return v;
+			}
+		});
+	}
+
+	/**
 	 * when map is clicked
 	 * 
 	 * @param callback
@@ -604,6 +645,20 @@ public class MapController {
 			@Override
 			public void onMapClick(LatLng latLng) {
 				callback.mapClicked(map, latLng);
+			}
+		});
+	}
+
+	/**
+	 * when map is long clicked
+	 * 
+	 * @param callback
+	 */
+	public static void whenMapLongClick(final MapLongClick callback) {
+		map.setOnMapLongClickListener(new OnMapLongClickListener() {
+			@Override
+			public void onMapLongClick(LatLng latLng) {
+				callback.mapLongClicked(map, latLng);
 			}
 		});
 	}
@@ -852,7 +907,7 @@ public class MapController {
 	 * @param enabled
 	 */
 	public static void showIndoor(boolean enabled) {
-		boolean result = map.setIndoorEnabled(enabled);
+		map.setIndoorEnabled(enabled);
 	}
 
 	/**
@@ -971,6 +1026,10 @@ public class MapController {
 
 	public interface MapClick {
 		public void mapClicked(GoogleMap map, LatLng latLng);
+	}
+
+	public interface MapLongClick {
+		public void mapLongClicked(GoogleMap map, LatLng latLng);
 	}
 
 	public interface MarkerAdd {
