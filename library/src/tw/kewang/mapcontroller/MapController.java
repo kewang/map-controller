@@ -33,39 +33,34 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * @author kewang
  */
 public class MapController {
-	public static enum MapType {
+	public enum MapType {
 		MAP_TYPE_NONE, MAP_TYPE_NORMAL, MAP_TYPE_SATELLITE, MAP_TYPE_TERRAIN, MAP_TYPE_HYBRID
 	}
 
-	private static Context context;
-	private static GoogleMap map;
-	private static ArrayList<Marker> markers;
-	private static OnCameraChangeListener ccListener;
-	private static OnMyLocationChangeListener mlListener;
+	private Context context;
+	private GoogleMap map;
+	private ArrayList<Marker> markers;
+	private OnCameraChangeListener ccListener;
+	private OnMyLocationChangeListener mlListener;
 
 	/**
-	 * attach and initialize Google Maps
+	 * initialize Google Maps
 	 * 
 	 * @param context
-	 * @param map
+	 * @throws GooglePlayServicesNotAvailableException
 	 */
-	public static void attach(Context context, GoogleMap map)
+	public static void initialize(Context context)
 			throws GooglePlayServicesNotAvailableException {
 		MapsInitializer.initialize(context);
-
-		MapController.context = context;
-		MapController.map = map;
 	}
 
 	/**
-	 * detach Google Maps
+	 * attach Google Maps
+	 * 
+	 * @param map
 	 */
-	public static void detach() {
-		context = null;
-		map = null;
-		markers = null;
-		ccListener = null;
-		mlListener = null;
+	public MapController(GoogleMap map) {
+		this.map = map;
 	}
 
 	/**
@@ -73,7 +68,7 @@ public class MapController {
 	 * 
 	 * @return
 	 */
-	public static GoogleMap getMap() {
+	public GoogleMap getMap() {
 		return map;
 	}
 
@@ -82,7 +77,7 @@ public class MapController {
 	 * 
 	 * @param type
 	 */
-	public static void setType(MapType type) {
+	public void setType(MapType type) {
 		map.setMapType(type.ordinal());
 	}
 
@@ -91,7 +86,7 @@ public class MapController {
 	 * 
 	 * @return
 	 */
-	public static MapType getType() {
+	public MapType getType() {
 		return MapType.valueOf(String.valueOf(map.getMapType()));
 	}
 
@@ -101,7 +96,7 @@ public class MapController {
 	 * @param tracking
 	 * @param callback
 	 */
-	public static void moveToMyLocation(final boolean tracking,
+	public void moveToMyLocation(final boolean tracking,
 			final ChangeMyLocation callback) {
 		showMyLocation();
 
@@ -132,7 +127,7 @@ public class MapController {
 	 * 
 	 * @param tracking
 	 */
-	public static void moveToMyLocation(boolean tracking) {
+	public void moveToMyLocation(boolean tracking) {
 		moveToMyLocation(tracking, null);
 	}
 
@@ -142,7 +137,7 @@ public class MapController {
 	 * @param tracking
 	 * @param callback
 	 */
-	public static void animateToMyLocation(final boolean tracking,
+	public void animateToMyLocation(final boolean tracking,
 			final ChangeMyLocation callback) {
 		showMyLocation();
 
@@ -173,7 +168,7 @@ public class MapController {
 	 * 
 	 * @param tracking
 	 */
-	public static void animateToMyLocation(boolean tracking) {
+	public void animateToMyLocation(boolean tracking) {
 		animateToMyLocation(tracking, null);
 	}
 
@@ -182,7 +177,7 @@ public class MapController {
 	 * 
 	 * @return
 	 */
-	public static Location getMyLocation() {
+	public Location getMyLocation() {
 		if (!map.isMyLocationEnabled()) {
 			showMyLocation();
 		}
@@ -193,7 +188,7 @@ public class MapController {
 	/**
 	 * show my current location
 	 */
-	public static void showMyLocation() {
+	public void showMyLocation() {
 		map.setMyLocationEnabled(true);
 	}
 
@@ -204,8 +199,7 @@ public class MapController {
 	 * @param zoom
 	 * @param callback
 	 */
-	public static void animateTo(LatLng latLng, int zoom,
-			final ChangePosition callback) {
+	public void animateTo(LatLng latLng, int zoom, final ChangePosition callback) {
 		if (ccListener == null) {
 			ccListener = new OnCameraChangeListener() {
 				@Override
@@ -231,7 +225,7 @@ public class MapController {
 	 * 
 	 * @param latLng
 	 */
-	public static void animateTo(LatLng latLng) {
+	public void animateTo(LatLng latLng) {
 		animateTo(latLng, (int) map.getCameraPosition().zoom, null);
 	}
 
@@ -241,7 +235,7 @@ public class MapController {
 	 * @param latLng
 	 * @param callback
 	 */
-	public static void animateTo(LatLng latLng, ChangePosition callback) {
+	public void animateTo(LatLng latLng, ChangePosition callback) {
 		animateTo(latLng, (int) map.getCameraPosition().zoom, callback);
 	}
 
@@ -252,7 +246,7 @@ public class MapController {
 	 * @param lng
 	 * @param callback
 	 */
-	public static void animateTo(double lat, double lng, ChangePosition callback) {
+	public void animateTo(double lat, double lng, ChangePosition callback) {
 		animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
 				callback);
 	}
@@ -263,7 +257,7 @@ public class MapController {
 	 * @param lat
 	 * @param lng
 	 */
-	public static void animateTo(double lat, double lng) {
+	public void animateTo(double lat, double lng) {
 		animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
 				null);
 	}
@@ -274,7 +268,7 @@ public class MapController {
 	 * @param latLng
 	 * @param zoom
 	 */
-	public static void animateTo(LatLng latLng, int zoom) {
+	public void animateTo(LatLng latLng, int zoom) {
 		animateTo(latLng, zoom, null);
 	}
 
@@ -285,7 +279,7 @@ public class MapController {
 	 * @param lng
 	 * @param zoom
 	 */
-	public static void animateTo(double lat, double lng, int zoom) {
+	public void animateTo(double lat, double lng, int zoom) {
 		animateTo(new LatLng(lat, lng), zoom, null);
 	}
 
@@ -297,7 +291,7 @@ public class MapController {
 	 * @param zoom
 	 * @param callback
 	 */
-	public static void animateTo(double lat, double lng, int zoom,
+	public void animateTo(double lat, double lng, int zoom,
 			ChangePosition callback) {
 		animateTo(new LatLng(lat, lng), zoom, callback);
 	}
@@ -308,8 +302,7 @@ public class MapController {
 	 * @param latLng
 	 * @param callback
 	 */
-	public static void moveTo(LatLng latLng, int zoom,
-			final ChangePosition callback) {
+	public void moveTo(LatLng latLng, int zoom, final ChangePosition callback) {
 		if (ccListener == null) {
 			ccListener = new OnCameraChangeListener() {
 				@Override
@@ -335,7 +328,7 @@ public class MapController {
 	 * 
 	 * @param latLng
 	 */
-	public static void moveTo(LatLng latLng) {
+	public void moveTo(LatLng latLng) {
 		moveTo(latLng, (int) map.getCameraPosition().zoom, null);
 	}
 
@@ -345,7 +338,7 @@ public class MapController {
 	 * @param latLng
 	 * @param callback
 	 */
-	public static void moveTo(LatLng latLng, ChangePosition callback) {
+	public void moveTo(LatLng latLng, ChangePosition callback) {
 		moveTo(latLng, (int) map.getCameraPosition().zoom, callback);
 	}
 
@@ -356,7 +349,7 @@ public class MapController {
 	 * @param lng
 	 * @param callback
 	 */
-	public static void moveTo(double lat, double lng, ChangePosition callback) {
+	public void moveTo(double lat, double lng, ChangePosition callback) {
 		moveTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
 				callback);
 	}
@@ -367,7 +360,7 @@ public class MapController {
 	 * @param lat
 	 * @param lng
 	 */
-	public static void moveTo(double lat, double lng) {
+	public void moveTo(double lat, double lng) {
 		moveTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom, null);
 	}
 
@@ -377,7 +370,7 @@ public class MapController {
 	 * @param latLng
 	 * @param zoom
 	 */
-	public static void moveTo(LatLng latLng, int zoom) {
+	public void moveTo(LatLng latLng, int zoom) {
 		moveTo(latLng, zoom, null);
 	}
 
@@ -388,7 +381,7 @@ public class MapController {
 	 * @param lng
 	 * @param zoom
 	 */
-	public static void moveTo(double lat, double lng, int zoom) {
+	public void moveTo(double lat, double lng, int zoom) {
 		moveTo(new LatLng(lat, lng), zoom, null);
 	}
 
@@ -400,8 +393,7 @@ public class MapController {
 	 * @param zoom
 	 * @param callback
 	 */
-	public static void moveTo(double lat, double lng, int zoom,
-			ChangePosition callback) {
+	public void moveTo(double lat, double lng, int zoom, ChangePosition callback) {
 		moveTo(new LatLng(lat, lng), zoom, callback);
 	}
 
@@ -412,8 +404,8 @@ public class MapController {
 	 * @param smooth
 	 * @param callback
 	 */
-	public static void setBounds(LatLng southwest, LatLng northeast,
-			int padding, boolean smooth, final ChangePosition callback) {
+	public void setBounds(LatLng southwest, LatLng northeast, int padding,
+			boolean smooth, final ChangePosition callback) {
 		if (ccListener == null) {
 			ccListener = new OnCameraChangeListener() {
 				@Override
@@ -446,8 +438,8 @@ public class MapController {
 	 * @param padding
 	 * @param smooth
 	 */
-	public static void setBounds(LatLng southwest, LatLng northeast,
-			int padding, boolean smooth) {
+	public void setBounds(LatLng southwest, LatLng northeast, int padding,
+			boolean smooth) {
 		setBounds(southwest, northeast, padding, smooth, null);
 	}
 
@@ -456,7 +448,7 @@ public class MapController {
 	 * @param northeast
 	 * @param padding
 	 */
-	public static void setBounds(LatLng southwest, LatLng northeast, int padding) {
+	public void setBounds(LatLng southwest, LatLng northeast, int padding) {
 		setBounds(southwest, northeast, padding, true, null);
 	}
 
@@ -468,7 +460,7 @@ public class MapController {
 	 * @param padding
 	 * @param smooth
 	 */
-	public static void setBounds(double swLat, double swLng, double neLat,
+	public void setBounds(double swLat, double swLng, double neLat,
 			double neLng, int padding, boolean smooth) {
 		setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
 				smooth, null);
@@ -481,7 +473,7 @@ public class MapController {
 	 * @param neLng
 	 * @param padding
 	 */
-	public static void setBounds(double swLat, double swLng, double neLat,
+	public void setBounds(double swLat, double swLng, double neLat,
 			double neLng, int padding) {
 		setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
 				true, null);
@@ -495,7 +487,7 @@ public class MapController {
 	 * @param padding
 	 * @param callback
 	 */
-	public static void setBounds(double swLat, double swLng, double neLat,
+	public void setBounds(double swLat, double swLng, double neLat,
 			double neLng, int padding, ChangePosition callback) {
 		setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
 				true, callback);
@@ -508,7 +500,7 @@ public class MapController {
 	 * @param smooth
 	 * @param callback
 	 */
-	public static void zoomTo(int zoom, boolean smooth, ChangePosition callback) {
+	public void zoomTo(int zoom, boolean smooth, ChangePosition callback) {
 		if (smooth) {
 			animateTo(map.getCameraPosition().target, zoom, callback);
 		} else {
@@ -521,7 +513,7 @@ public class MapController {
 	 * 
 	 * @param zoom
 	 */
-	public static void zoomTo(int zoom) {
+	public void zoomTo(int zoom) {
 		zoomTo(zoom, true, null);
 	}
 
@@ -531,7 +523,7 @@ public class MapController {
 	 * @param zoom
 	 * @param callback
 	 */
-	public static void zoomTo(int zoom, ChangePosition callback) {
+	public void zoomTo(int zoom, ChangePosition callback) {
 		zoomTo(zoom, true, callback);
 	}
 
@@ -541,14 +533,14 @@ public class MapController {
 	 * @param zoom
 	 * @param smooth
 	 */
-	public static void zoomTo(int zoom, boolean smooth) {
+	public void zoomTo(int zoom, boolean smooth) {
 		zoomTo(zoom, smooth, null);
 	}
 
 	/**
 	 * zoom map in
 	 */
-	public static void zoomIn() {
+	public void zoomIn() {
 		zoomTo((int) (map.getCameraPosition().zoom + 1), true, null);
 	}
 
@@ -557,7 +549,7 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void zoomIn(ChangePosition callback) {
+	public void zoomIn(ChangePosition callback) {
 		zoomTo((int) (map.getCameraPosition().zoom + 1), true, callback);
 	}
 
@@ -567,14 +559,14 @@ public class MapController {
 	 * @param smooth
 	 * @param callback
 	 */
-	public static void zoomIn(boolean smooth, ChangePosition callback) {
+	public void zoomIn(boolean smooth, ChangePosition callback) {
 		zoomTo((int) (map.getCameraPosition().zoom + 1), smooth, callback);
 	}
 
 	/**
 	 * zoom map out
 	 */
-	public static void zoomOut() {
+	public void zoomOut() {
 		zoomTo((int) (map.getCameraPosition().zoom - 1), true, null);
 	}
 
@@ -583,7 +575,7 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void zoomOut(ChangePosition callback) {
+	public void zoomOut(ChangePosition callback) {
 		zoomTo((int) (map.getCameraPosition().zoom - 1), true, callback);
 	}
 
@@ -593,7 +585,7 @@ public class MapController {
 	 * @param smooth
 	 * @param callback
 	 */
-	public static void zoomOut(boolean smooth, ChangePosition callback) {
+	public void zoomOut(boolean smooth, ChangePosition callback) {
 		zoomTo((int) (map.getCameraPosition().zoom - 1), smooth, callback);
 	}
 
@@ -602,7 +594,7 @@ public class MapController {
 	 * 
 	 * @param v
 	 */
-	public static void setInfoWindow(final View v) {
+	public void setInfoWindow(final View v) {
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {
 			@Override
 			public View getInfoWindow(Marker marker) {
@@ -621,7 +613,7 @@ public class MapController {
 	 * 
 	 * @param v
 	 */
-	public static void setInfoContents(final View v) {
+	public void setInfoContents(final View v) {
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {
 			@Override
 			public View getInfoWindow(Marker marker) {
@@ -640,7 +632,7 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenMapClick(final ClickCallback callback) {
+	public void whenMapClick(final ClickCallback callback) {
 		map.setOnMapClickListener(new OnMapClickListener() {
 			@Override
 			public void onMapClick(LatLng latLng) {
@@ -654,7 +646,7 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenMapLongClick(final ClickCallback callback) {
+	public void whenMapLongClick(final ClickCallback callback) {
 		map.setOnMapLongClickListener(new OnMapLongClickListener() {
 			@Override
 			public void onMapLongClick(LatLng latLng) {
@@ -668,7 +660,7 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenInfoWindowClick(final MarkerCallback callback) {
+	public void whenInfoWindowClick(final MarkerCallback callback) {
 		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			@Override
 			public void onInfoWindowClick(Marker marker) {
@@ -682,7 +674,7 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenMarkerClick(final MarkerCallback callback) {
+	public void whenMarkerClick(final MarkerCallback callback) {
 		map.setOnMarkerClickListener(new OnMarkerClickListener() {
 			@Override
 			public boolean onMarkerClick(Marker marker) {
@@ -698,7 +690,7 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenMarkerDrag(final MarkerDrag callback) {
+	public void whenMarkerDrag(final MarkerDrag callback) {
 		map.setOnMarkerDragListener(new OnMarkerDragListener() {
 			@Override
 			public void onMarkerDragStart(Marker marker) {
@@ -723,7 +715,7 @@ public class MapController {
 	 * @param opts
 	 * @param callback
 	 */
-	public static void addMarker(MarkerOptions opts, MarkerCallback callback) {
+	public void addMarker(MarkerOptions opts, MarkerCallback callback) {
 		Marker marker = map.addMarker(opts);
 
 		if (markers == null) {
@@ -742,7 +734,7 @@ public class MapController {
 	 * 
 	 * @param opts
 	 */
-	public static void addMarker(MarkerOptions opts) {
+	public void addMarker(MarkerOptions opts) {
 		addMarker(opts, null);
 	}
 
@@ -752,7 +744,7 @@ public class MapController {
 	 * @param latLng
 	 * @param opts
 	 */
-	public static void addMarker(LatLng latLng, MarkerOptions opts) {
+	public void addMarker(LatLng latLng, MarkerOptions opts) {
 		addMarker(opts.position(latLng), null);
 	}
 
@@ -763,7 +755,7 @@ public class MapController {
 	 * @param lng
 	 * @param opts
 	 */
-	public static void addMarker(double lat, double lng, MarkerOptions opts) {
+	public void addMarker(double lat, double lng, MarkerOptions opts) {
 		addMarker(opts.position(new LatLng(lat, lng)), null);
 	}
 
@@ -772,7 +764,7 @@ public class MapController {
 	 * 
 	 * @param latLng
 	 */
-	public static void addMarker(LatLng latLng) {
+	public void addMarker(LatLng latLng) {
 		addMarker(new MarkerOptions().position(latLng), null);
 	}
 
@@ -782,7 +774,7 @@ public class MapController {
 	 * @param lat
 	 * @param lng
 	 */
-	public static void addMarker(double lat, double lng) {
+	public void addMarker(double lat, double lng) {
 		addMarker(new MarkerOptions().position(new LatLng(lat, lng)), null);
 	}
 
@@ -793,7 +785,7 @@ public class MapController {
 	 * @param opts
 	 * @param callback
 	 */
-	public static void addMarker(LatLng latLng, MarkerOptions opts,
+	public void addMarker(LatLng latLng, MarkerOptions opts,
 			MarkerCallback callback) {
 		addMarker(opts.position(latLng), callback);
 	}
@@ -806,7 +798,7 @@ public class MapController {
 	 * @param opts
 	 * @param callback
 	 */
-	public static void addMarker(double lat, double lng, MarkerOptions opts,
+	public void addMarker(double lat, double lng, MarkerOptions opts,
 			MarkerCallback callback) {
 		addMarker(opts.position(new LatLng(lat, lng)), callback);
 	}
@@ -817,7 +809,7 @@ public class MapController {
 	 * @param latLng
 	 * @param callback
 	 */
-	public static void addMarker(LatLng latLng, MarkerCallback callback) {
+	public void addMarker(LatLng latLng, MarkerCallback callback) {
 		addMarker(new MarkerOptions().position(latLng), callback);
 	}
 
@@ -828,7 +820,7 @@ public class MapController {
 	 * @param lng
 	 * @param callback
 	 */
-	public static void addMarker(double lat, double lng, MarkerCallback callback) {
+	public void addMarker(double lat, double lng, MarkerCallback callback) {
 		addMarker(new MarkerOptions().position(new LatLng(lat, lng)), callback);
 	}
 
@@ -838,7 +830,7 @@ public class MapController {
 	 * @param allOpts
 	 * @param callback
 	 */
-	public static void addMarkers(ArrayList<MarkerOptions> allOpts,
+	public void addMarkers(ArrayList<MarkerOptions> allOpts,
 			MarkerCallback callback) {
 		if (markers == null) {
 			markers = new ArrayList<Marker>();
@@ -860,7 +852,7 @@ public class MapController {
 	 * 
 	 * @param allOpts
 	 */
-	public static void addMarkers(ArrayList<MarkerOptions> allOpts) {
+	public void addMarkers(ArrayList<MarkerOptions> allOpts) {
 		addMarkers(allOpts, null);
 	}
 
@@ -869,7 +861,7 @@ public class MapController {
 	 * 
 	 * @return
 	 */
-	public static ArrayList<Marker> getMarkers() {
+	public ArrayList<Marker> getMarkers() {
 		return markers;
 	}
 
@@ -879,14 +871,14 @@ public class MapController {
 	 * @param index
 	 * @return
 	 */
-	public static Marker getMarker(int index) {
+	public Marker getMarker(int index) {
 		return markers.get(index);
 	}
 
 	/**
 	 * clear all markers
 	 */
-	public static void clearMarkers() {
+	public void clearMarkers() {
 		map.clear();
 
 		markers.clear();
@@ -897,7 +889,7 @@ public class MapController {
 	 * 
 	 * @param enabled
 	 */
-	public static void showTraffic(boolean enabled) {
+	public void showTraffic(boolean enabled) {
 		map.setTrafficEnabled(enabled);
 	}
 
@@ -906,7 +898,7 @@ public class MapController {
 	 * 
 	 * @param enabled
 	 */
-	public static void showIndoor(boolean enabled) {
+	public void showIndoor(boolean enabled) {
 		map.setIndoorEnabled(enabled);
 	}
 
@@ -916,7 +908,7 @@ public class MapController {
 	 * @param location
 	 * @param callback
 	 */
-	public static void find(String location, FindResult callback) {
+	public void find(String location, FindResult callback) {
 		Geocoder geocoder = new Geocoder(context);
 		ArrayList<Address> addresses = new ArrayList<Address>();
 
@@ -935,7 +927,7 @@ public class MapController {
 	 * 
 	 * @param location
 	 */
-	public static void find(String location) {
+	public void find(String location) {
 		find(location, null);
 	}
 
@@ -945,8 +937,7 @@ public class MapController {
 	 * @param location
 	 * @param callback
 	 */
-	public static void findAsync(final String location,
-			final FindResult callback) {
+	public void findAsync(final String location, final FindResult callback) {
 		new AsyncTask<Void, Void, Void>() {
 			private ProgressDialog dialog;
 			private ArrayList<Address> addresses;
@@ -990,12 +981,11 @@ public class MapController {
 	 * 
 	 * @param location
 	 */
-	public static void findAsync(String location) {
+	public void findAsync(String location) {
 		findAsync(location, null);
 	}
 
-	private static void findCallback(FindResult callback,
-			ArrayList<Address> addresses) {
+	private void findCallback(FindResult callback, ArrayList<Address> addresses) {
 		if (callback != null) {
 			callback.foundResult(map, addresses);
 		} else {
