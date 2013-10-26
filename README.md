@@ -83,9 +83,9 @@ MapController.animateTo(latLng, new Move() {
 You can use `MapController.addMarker(MarkerOptions)` to add marker to map, like this:
 
 ```java
-MapController.addMarker(opts, new MarkerAdd() {
+MapController.addMarker(opts, new MarkerCallback() {
 	@Override
-	public void markerAdded(GoogleMap map, Marker marker) {
+	public void invokedMarker(GoogleMap map, Marker marker) {
 		Toast.makeText(AddMarker.this, marker.getId(), Toast.LENGTH_SHORT).show();
 	}
 });
