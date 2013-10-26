@@ -640,11 +640,11 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenMapClick(final MapClick callback) {
+	public static void whenMapClick(final ClickCallback callback) {
 		map.setOnMapClickListener(new OnMapClickListener() {
 			@Override
 			public void onMapClick(LatLng latLng) {
-				callback.mapClicked(map, latLng);
+				callback.clicked(map, latLng);
 			}
 		});
 	}
@@ -654,11 +654,11 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenMapLongClick(final MapLongClick callback) {
+	public static void whenMapLongClick(final ClickCallback callback) {
 		map.setOnMapLongClickListener(new OnMapLongClickListener() {
 			@Override
 			public void onMapLongClick(LatLng latLng) {
-				callback.mapLongClicked(map, latLng);
+				callback.clicked(map, latLng);
 			}
 		});
 	}
@@ -668,11 +668,11 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenInfoWindowClick(final InfoWindowClick callback) {
+	public static void whenInfoWindowClick(final MarkerCallback callback) {
 		map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			@Override
 			public void onInfoWindowClick(Marker marker) {
-				callback.markerInfoWindowClicked(map, marker);
+				callback.invokedMarker(map, marker);
 			}
 		});
 	}
@@ -682,11 +682,11 @@ public class MapController {
 	 * 
 	 * @param callback
 	 */
-	public static void whenMarkerClick(final MarkerClick callback) {
+	public static void whenMarkerClick(final MarkerCallback callback) {
 		map.setOnMarkerClickListener(new OnMarkerClickListener() {
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-				callback.markerClicked(map, marker);
+				callback.invokedMarker(map, marker);
 
 				return true;
 			}
@@ -723,7 +723,7 @@ public class MapController {
 	 * @param opts
 	 * @param callback
 	 */
-	public static void addMarker(MarkerOptions opts, MarkerAdd callback) {
+	public static void addMarker(MarkerOptions opts, MarkerCallback callback) {
 		Marker marker = map.addMarker(opts);
 
 		if (markers == null) {
@@ -733,7 +733,7 @@ public class MapController {
 		markers.add(marker);
 
 		if (callback != null) {
-			callback.markerAdded(map, marker);
+			callback.invokedMarker(map, marker);
 		}
 	}
 
@@ -794,7 +794,7 @@ public class MapController {
 	 * @param callback
 	 */
 	public static void addMarker(LatLng latLng, MarkerOptions opts,
-			MarkerAdd callback) {
+			MarkerCallback callback) {
 		addMarker(opts.position(latLng), callback);
 	}
 
@@ -807,7 +807,7 @@ public class MapController {
 	 * @param callback
 	 */
 	public static void addMarker(double lat, double lng, MarkerOptions opts,
-			MarkerAdd callback) {
+			MarkerCallback callback) {
 		addMarker(opts.position(new LatLng(lat, lng)), callback);
 	}
 
@@ -817,7 +817,7 @@ public class MapController {
 	 * @param latLng
 	 * @param callback
 	 */
-	public static void addMarker(LatLng latLng, MarkerAdd callback) {
+	public static void addMarker(LatLng latLng, MarkerCallback callback) {
 		addMarker(new MarkerOptions().position(latLng), callback);
 	}
 
@@ -828,7 +828,7 @@ public class MapController {
 	 * @param lng
 	 * @param callback
 	 */
-	public static void addMarker(double lat, double lng, MarkerAdd callback) {
+	public static void addMarker(double lat, double lng, MarkerCallback callback) {
 		addMarker(new MarkerOptions().position(new LatLng(lat, lng)), callback);
 	}
 
@@ -839,7 +839,7 @@ public class MapController {
 	 * @param callback
 	 */
 	public static void addMarkers(ArrayList<MarkerOptions> allOpts,
-			MarkerAdd callback) {
+			MarkerCallback callback) {
 		if (markers == null) {
 			markers = new ArrayList<Marker>();
 		}
@@ -850,7 +850,7 @@ public class MapController {
 			markers.add(marker);
 
 			if (callback != null) {
-				callback.markerAdded(map, marker);
+				callback.invokedMarker(map, marker);
 			}
 		}
 	}
@@ -1024,24 +1024,12 @@ public class MapController {
 		public void changed(GoogleMap map, CameraPosition position);
 	}
 
-	public interface MapClick {
-		public void mapClicked(GoogleMap map, LatLng latLng);
+	public interface ClickCallback {
+		public void clicked(GoogleMap map, LatLng latLng);
 	}
 
-	public interface MapLongClick {
-		public void mapLongClicked(GoogleMap map, LatLng latLng);
-	}
-
-	public interface MarkerAdd {
-		public void markerAdded(GoogleMap map, Marker marker);
-	}
-
-	public interface InfoWindowClick {
-		public void markerInfoWindowClicked(GoogleMap map, Marker marker);
-	}
-
-	public interface MarkerClick {
-		public void markerClicked(GoogleMap map, Marker marker);
+	public interface MarkerCallback {
+		public void invokedMarker(GoogleMap map, Marker marker);
 	}
 
 	public interface MarkerDrag {
