@@ -987,7 +987,7 @@ public class MapController {
 
 	private void findCallback(FindResult callback, ArrayList<Address> addresses) {
 		if (callback != null) {
-			callback.foundResult(map, addresses);
+			callback.found(map, addresses);
 		} else {
 			for (Address address : addresses) {
 				MarkerOptions opts = new MarkerOptions();
@@ -1031,6 +1031,6 @@ public class MapController {
 	}
 
 	public interface FindResult {
-		public void foundResult(GoogleMap map, ArrayList<Address> addresses);
+		public void found(GoogleMap map, ArrayList<Address> addresses);
 	}
 }
