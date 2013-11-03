@@ -9,9 +9,16 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -21,7 +28,6 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,11 +43,12 @@ public class MapController {
 		MAP_TYPE_NONE, MAP_TYPE_NORMAL, MAP_TYPE_SATELLITE, MAP_TYPE_TERRAIN, MAP_TYPE_HYBRID
 	}
 
-	private Context context;
+	private static Context context;
+
 	private GoogleMap map;
 	private ArrayList<Marker> markers;
 	private OnCameraChangeListener ccListener;
-	private OnMyLocationChangeListener mlListener;
+	private LocationClient lClient;
 
 	/**
 	 * initialize Google Maps
@@ -51,6 +58,8 @@ public class MapController {
 	 */
 	public static void initialize(Context context)
 			throws GooglePlayServicesNotAvailableException {
+		MapController.context = context;
+
 		MapsInitializer.initialize(context);
 	}
 
@@ -100,26 +109,41 @@ public class MapController {
 			final ChangeMyLocation callback) {
 		showMyLocation();
 
-		if (mlListener == null) {
-			mlListener = new OnMyLocationChangeListener() {
-				@Override
-				public void onMyLocationChange(Location location) {
-					map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(
-							location.getLatitude(), location.getLongitude())));
+		lClient = new LocationClient(context, new ConnectionCallbacks() {
+			@Override
+			public void onDisconnected() {
+			}
 
-					if (!tracking) {
-						mlListener = null;
-						map.setOnMyLocationChangeListener(null);
-					}
+			@Override
+			public void onConnected(Bundle connectionHint) {
+				LocationRequest request = LocationRequest.create()
+						.setInterval(5000).setFastestInterval(16)
+						.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-					if (callback != null) {
-						callback.changed(map, location);
-					}
+				if (!tracking) {
+					request.setNumUpdates(1);
 				}
-			};
-		}
 
-		map.setOnMyLocationChangeListener(mlListener);
+				lClient.requestLocationUpdates(request, new LocationListener() {
+					@Override
+					public void onLocationChanged(Location location) {
+						map.moveCamera(CameraUpdateFactory
+								.newLatLng(new LatLng(location.getLatitude(),
+										location.getLongitude())));
+
+						if (callback != null) {
+							callback.changed(map, location);
+						}
+					}
+				});
+			}
+		}, new OnConnectionFailedListener() {
+			@Override
+			public void onConnectionFailed(ConnectionResult result) {
+			}
+		});
+
+		lClient.connect();
 	}
 
 	/**
@@ -141,26 +165,41 @@ public class MapController {
 			final ChangeMyLocation callback) {
 		showMyLocation();
 
-		if (mlListener == null) {
-			mlListener = new OnMyLocationChangeListener() {
-				@Override
-				public void onMyLocationChange(Location location) {
-					map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
-							location.getLatitude(), location.getLongitude())));
+		lClient = new LocationClient(context, new ConnectionCallbacks() {
+			@Override
+			public void onDisconnected() {
+			}
 
-					if (!tracking) {
-						mlListener = null;
-						map.setOnMyLocationChangeListener(null);
-					}
+			@Override
+			public void onConnected(Bundle connectionHint) {
+				LocationRequest request = LocationRequest.create()
+						.setInterval(5000).setFastestInterval(16)
+						.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-					if (callback != null) {
-						callback.changed(map, location);
-					}
+				if (!tracking) {
+					request.setNumUpdates(1);
 				}
-			};
-		}
 
-		map.setOnMyLocationChangeListener(mlListener);
+				lClient.requestLocationUpdates(request, new LocationListener() {
+					@Override
+					public void onLocationChanged(Location location) {
+						map.animateCamera(CameraUpdateFactory
+								.newLatLng(new LatLng(location.getLatitude(),
+										location.getLongitude())));
+
+						if (callback != null) {
+							callback.changed(map, location);
+						}
+					}
+				});
+			}
+		}, new OnConnectionFailedListener() {
+			@Override
+			public void onConnectionFailed(ConnectionResult result) {
+			}
+		});
+
+		lClient.connect();
 	}
 
 	/**
