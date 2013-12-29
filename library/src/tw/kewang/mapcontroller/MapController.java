@@ -19,6 +19,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -41,6 +42,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapController {
 	public enum MapType {
 		MAP_TYPE_NONE, MAP_TYPE_NORMAL, MAP_TYPE_SATELLITE, MAP_TYPE_TERRAIN, MAP_TYPE_HYBRID
+	}
+
+	public enum TrackType {
+		TRACK_TYPE_MOVE, TRACK_TYPE_ANIMATE, TRACK_TYPE_NONE
 	}
 
 	private static Context context;
@@ -103,12 +108,16 @@ public class MapController {
 	}
 
 	/**
-	 * move to my current location
+	 * start tracking my current location
 	 * 
-	 * @param tracking
+	 * @param map
+	 * @param interval
+	 * @param numUpdates
+	 * @param type
 	 * @param callback
 	 */
-	public void moveToMyLocation(final boolean tracking,
+	public void startTrackMyLocation(final GoogleMap map, final long interval,
+			final int numUpdates, final TrackType type,
 			final ChangeMyLocation callback) {
 		if (map != null) {
 			showMyLocation();
@@ -122,21 +131,27 @@ public class MapController {
 			@Override
 			public void onConnected(Bundle connectionHint) {
 				LocationRequest request = LocationRequest.create()
-						.setInterval(5000).setFastestInterval(16)
+						.setInterval(interval).setFastestInterval(16)
 						.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-				if (!tracking) {
-					request.setNumUpdates(1);
+				if (numUpdates != 0) {
+					request.setNumUpdates(numUpdates);
 				}
 
 				lClient.requestLocationUpdates(request, new LocationListener() {
 					@Override
 					public void onLocationChanged(Location location) {
 						if (map != null) {
-							map.moveCamera(CameraUpdateFactory
+							CameraUpdate latLng = CameraUpdateFactory
 									.newLatLng(new LatLng(location
 											.getLatitude(), location
-											.getLongitude())));
+											.getLongitude()));
+
+							if (type == TrackType.TRACK_TYPE_MOVE) {
+								map.moveCamera(latLng);
+							} else if (type == TrackType.TRACK_TYPE_ANIMATE) {
+								map.animateCamera(latLng);
+							}
 						}
 
 						if (callback != null) {
@@ -155,72 +170,67 @@ public class MapController {
 	}
 
 	/**
-	 * move to my current location
+	 * start tracking my current location
 	 * 
-	 * @param tracking
-	 */
-	public void moveToMyLocation(boolean tracking) {
-		moveToMyLocation(tracking, null);
-	}
-
-	public void trackMyLocation(ChangeMyLocation callback) {
-		moveToMyLocation(true, callback);
-	}
-
-	/**
-	 * move to my current location
-	 * 
-	 * @param tracking
 	 * @param callback
 	 */
-	public void animateToMyLocation(final boolean tracking,
-			final ChangeMyLocation callback) {
-		showMyLocation();
+	public void startTrackMyLocation(ChangeMyLocation callback) {
+		startTrackMyLocation(null, 5000, 0, TrackType.TRACK_TYPE_NONE, callback);
+	}
 
-		lClient = new LocationClient(context, new ConnectionCallbacks() {
-			@Override
-			public void onDisconnected() {
-			}
+	/**
+	 * start tracking my current location
+	 * 
+	 * @param interval
+	 * @param numUpdates
+	 * @param callback
+	 */
+	public void startTrackMyLocation(long interval, int numUpdates,
+			ChangeMyLocation callback) {
+		startTrackMyLocation(null, interval, numUpdates,
+				TrackType.TRACK_TYPE_NONE, callback);
+	}
 
-			@Override
-			public void onConnected(Bundle connectionHint) {
-				LocationRequest request = LocationRequest.create()
-						.setInterval(5000).setFastestInterval(16)
-						.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-				if (!tracking) {
-					request.setNumUpdates(1);
-				}
-
-				lClient.requestLocationUpdates(request, new LocationListener() {
-					@Override
-					public void onLocationChanged(Location location) {
-						map.animateCamera(CameraUpdateFactory
-								.newLatLng(new LatLng(location.getLatitude(),
-										location.getLongitude())));
-
-						if (callback != null) {
-							callback.changed(map, location);
-						}
-					}
-				});
-			}
-		}, new OnConnectionFailedListener() {
-			@Override
-			public void onConnectionFailed(ConnectionResult result) {
-			}
-		});
-
-		lClient.connect();
+	/**
+	 * stop tracking my current location
+	 */
+	public void stopTrackMyLocation() {
+		if (lClient != null) {
+			lClient.disconnect();
+		}
 	}
 
 	/**
 	 * move to my current location
 	 * 
-	 * @param tracking
+	 * @param callback
 	 */
-	public void animateToMyLocation(boolean tracking) {
-		animateToMyLocation(tracking, null);
+	public void moveToMyLocation(ChangeMyLocation callback) {
+		startTrackMyLocation(map, 5000, 1, TrackType.TRACK_TYPE_MOVE, callback);
+	}
+
+	/**
+	 * move to my current location
+	 */
+	public void moveToMyLocation() {
+		moveToMyLocation(null);
+	}
+
+	/**
+	 * move to my current location
+	 * 
+	 * @param callback
+	 */
+	public void animateToMyLocation(ChangeMyLocation callback) {
+		startTrackMyLocation(map, 5000, 1, TrackType.TRACK_TYPE_ANIMATE,
+				callback);
+	}
+
+	/**
+	 * move to my current location
+	 */
+	public void animateToMyLocation() {
+		animateToMyLocation(null);
 	}
 
 	/**
