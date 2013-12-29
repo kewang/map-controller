@@ -48,7 +48,7 @@ Typically, you can use `MapController#showMyLocation()` to show your location.
 
 ### Move to my location
 
-You can use `MapController#moveToMyLocation(false)` to move your current location. Also you can use `MapController#animateToMyLocation(false)` to move smoothly.
+You can use `MapController#moveToMyLocation()` to move your current location. Also you can use `MapController#animateToMyLocation()` to move smoothly.
 
 ### Get my location
 
@@ -56,16 +56,18 @@ You can use `MapController#getMyLocation()` to get your current location.
 
 ### Tracking my location
 
-If you want to track your location at runtime and do something. You can use `MapController#moveToMyLocation(true)` like this:
+If you want to track your location at runtime and do something. You can use `MapController#startTrackMyLocation()` like this:
 
 ```java
-mc.moveToMyLocation(true, new ChangeMyLocation() {
+mc.startTrackMyLocation(new ChangeMyLocation() {
 	@Override
 	public void changed(GoogleMap map, Location location) {
 		Toast.makeText(TrackingMyLocation.this, location.toString(), Toast.LENGTH_SHORT).show();
 	}
 });
 ```
+
+And don't forget to stop tracking `MapController#stopTrackMyLocation()` when you leave the activity or service.
 
 ### Move to specific location
 
