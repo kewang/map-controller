@@ -72,6 +72,9 @@ public class MapController {
 		this.map = map;
 	}
 
+	public MapController() {
+	}
+
 	/**
 	 * return map's instance
 	 * 
@@ -107,7 +110,9 @@ public class MapController {
 	 */
 	public void moveToMyLocation(final boolean tracking,
 			final ChangeMyLocation callback) {
-		showMyLocation();
+		if (map != null) {
+			showMyLocation();
+		}
 
 		lClient = new LocationClient(context, new ConnectionCallbacks() {
 			@Override
@@ -127,9 +132,12 @@ public class MapController {
 				lClient.requestLocationUpdates(request, new LocationListener() {
 					@Override
 					public void onLocationChanged(Location location) {
-						map.moveCamera(CameraUpdateFactory
-								.newLatLng(new LatLng(location.getLatitude(),
-										location.getLongitude())));
+						if (map != null) {
+							map.moveCamera(CameraUpdateFactory
+									.newLatLng(new LatLng(location
+											.getLatitude(), location
+											.getLongitude())));
+						}
 
 						if (callback != null) {
 							callback.changed(map, location);
@@ -153,6 +161,10 @@ public class MapController {
 	 */
 	public void moveToMyLocation(boolean tracking) {
 		moveToMyLocation(tracking, null);
+	}
+
+	public void trackMyLocation(ChangeMyLocation callback) {
+		moveToMyLocation(true, callback);
 	}
 
 	/**
