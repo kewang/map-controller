@@ -942,7 +942,9 @@ public class MapController {
 	public void clearMarkers() {
 		map.clear();
 
-		markers.clear();
+		if (markers != null) {
+			markers.clear();
+		}
 	}
 
 	/**
