@@ -775,8 +775,9 @@ public class MapController {
 	 * 
 	 * @param opts
 	 * @param callback
+	 * @return
 	 */
-	public void addMarker(MarkerOptions opts, MarkerCallback callback) {
+	public Marker addMarker(MarkerOptions opts, MarkerCallback callback) {
 		Marker marker = map.addMarker(opts);
 
 		if (markers == null) {
@@ -788,15 +789,18 @@ public class MapController {
 		if (callback != null) {
 			callback.invokedMarker(map, marker);
 		}
+
+		return marker;
 	}
 
 	/**
 	 * add marker to map
 	 * 
 	 * @param opts
+	 * @return
 	 */
-	public void addMarker(MarkerOptions opts) {
-		addMarker(opts, null);
+	public Marker addMarker(MarkerOptions opts) {
+		return addMarker(opts, null);
 	}
 
 	/**
@@ -804,9 +808,10 @@ public class MapController {
 	 * 
 	 * @param latLng
 	 * @param opts
+	 * @return
 	 */
-	public void addMarker(LatLng latLng, MarkerOptions opts) {
-		addMarker(opts.position(latLng), null);
+	public Marker addMarker(LatLng latLng, MarkerOptions opts) {
+		return addMarker(opts.position(latLng), null);
 	}
 
 	/**
@@ -815,18 +820,20 @@ public class MapController {
 	 * @param lat
 	 * @param lng
 	 * @param opts
+	 * @return
 	 */
-	public void addMarker(double lat, double lng, MarkerOptions opts) {
-		addMarker(opts.position(new LatLng(lat, lng)), null);
+	public Marker addMarker(double lat, double lng, MarkerOptions opts) {
+		return addMarker(opts.position(new LatLng(lat, lng)), null);
 	}
 
 	/**
 	 * add marker to map
 	 * 
 	 * @param latLng
+	 * @return
 	 */
-	public void addMarker(LatLng latLng) {
-		addMarker(new MarkerOptions().position(latLng), null);
+	public Marker addMarker(LatLng latLng) {
+		return addMarker(new MarkerOptions().position(latLng), null);
 	}
 
 	/**
@@ -834,9 +841,11 @@ public class MapController {
 	 * 
 	 * @param lat
 	 * @param lng
+	 * @return
 	 */
-	public void addMarker(double lat, double lng) {
-		addMarker(new MarkerOptions().position(new LatLng(lat, lng)), null);
+	public Marker addMarker(double lat, double lng) {
+		return addMarker(new MarkerOptions().position(new LatLng(lat, lng)),
+				null);
 	}
 
 	/**
@@ -845,10 +854,11 @@ public class MapController {
 	 * @param latLng
 	 * @param opts
 	 * @param callback
+	 * @return
 	 */
-	public void addMarker(LatLng latLng, MarkerOptions opts,
+	public Marker addMarker(LatLng latLng, MarkerOptions opts,
 			MarkerCallback callback) {
-		addMarker(opts.position(latLng), callback);
+		return addMarker(opts.position(latLng), callback);
 	}
 
 	/**
@@ -858,10 +868,11 @@ public class MapController {
 	 * @param lng
 	 * @param opts
 	 * @param callback
+	 * @return
 	 */
-	public void addMarker(double lat, double lng, MarkerOptions opts,
+	public Marker addMarker(double lat, double lng, MarkerOptions opts,
 			MarkerCallback callback) {
-		addMarker(opts.position(new LatLng(lat, lng)), callback);
+		return addMarker(opts.position(new LatLng(lat, lng)), callback);
 	}
 
 	/**
@@ -869,9 +880,10 @@ public class MapController {
 	 * 
 	 * @param latLng
 	 * @param callback
+	 * @return
 	 */
-	public void addMarker(LatLng latLng, MarkerCallback callback) {
-		addMarker(new MarkerOptions().position(latLng), callback);
+	public Marker addMarker(LatLng latLng, MarkerCallback callback) {
+		return addMarker(new MarkerOptions().position(latLng), callback);
 	}
 
 	/**
@@ -880,9 +892,11 @@ public class MapController {
 	 * @param lat
 	 * @param lng
 	 * @param callback
+	 * @return
 	 */
-	public void addMarker(double lat, double lng, MarkerCallback callback) {
-		addMarker(new MarkerOptions().position(new LatLng(lat, lng)), callback);
+	public Marker addMarker(double lat, double lng, MarkerCallback callback) {
+		return addMarker(new MarkerOptions().position(new LatLng(lat, lng)),
+				callback);
 	}
 
 	/**
