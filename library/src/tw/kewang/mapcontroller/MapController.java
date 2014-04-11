@@ -654,7 +654,11 @@ public class MapController {
 	 * replace the default info-window
 	 * 
 	 * @param v
+	 * @see #setInfoWindowAdapter(InfoWindowAdapter)
+	 * @deprecated please use to
+	 *             {@link #setInfoWindowAdapter(InfoWindowAdapter)}
 	 */
+	@Deprecated
 	public void setInfoWindow(final View v) {
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {
 			@Override
@@ -673,7 +677,11 @@ public class MapController {
 	 * replace the info-window contents
 	 * 
 	 * @param v
+	 * @see #setInfoWindowAdapter(InfoWindowAdapter)
+	 * @deprecated please use to
+	 *             {@link #setInfoWindowAdapter(InfoWindowAdapter)}
 	 */
+	@Deprecated
 	public void setInfoContents(final View v) {
 		map.setInfoWindowAdapter(new InfoWindowAdapter() {
 			@Override
@@ -686,6 +694,15 @@ public class MapController {
 				return v;
 			}
 		});
+	}
+
+	/**
+	 * set the info-window adpater
+	 * 
+	 * @param adapter
+	 */
+	public void setInfoWindowAdapter(InfoWindowAdapter adapter) {
+		map.setInfoWindowAdapter(adapter);
 	}
 
 	/**
