@@ -130,6 +130,10 @@ public class MapController {
 
 			@Override
 			public void onConnected(Bundle connectionHint) {
+				if (callback != null) {
+					callback.changed(map, lClient.getLastLocation());
+				}
+
 				LocationRequest request = LocationRequest.create()
 						.setInterval(interval).setFastestInterval(16)
 						.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
