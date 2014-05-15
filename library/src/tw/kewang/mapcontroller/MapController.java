@@ -131,7 +131,7 @@ public class MapController {
 			@Override
 			public void onConnected(Bundle connectionHint) {
 				if (callback != null) {
-					callback.changed(map, lClient.getLastLocation());
+					callback.changed(map, lClient.getLastLocation(), true);
 				}
 
 				LocationRequest request = LocationRequest.create()
@@ -159,7 +159,7 @@ public class MapController {
 						}
 
 						if (callback != null) {
-							callback.changed(map, location);
+							callback.changed(map, location, false);
 						}
 					}
 				});
@@ -1105,7 +1105,8 @@ public class MapController {
 	}
 
 	public interface ChangeMyLocation {
-		public void changed(GoogleMap map, Location location);
+		public void changed(GoogleMap map, Location location,
+				boolean lastLocation);
 	}
 
 	public interface ChangePosition {
