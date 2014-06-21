@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Map-controller by kewangtw</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Map-controller</h1>
+        <h2>Control Google Maps v2 for Android</h2>
+        <a href="https://github.com/kewangtw/map-controller" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="map-controller" class="anchor" href="#map-controller"><span class="octicon octicon-link"></span></a>map-controller</h1>
+
+<p>Control Google Maps v2 for Android</p>
+
+<h2>
+<a name="prerequisite" class="anchor" href="#prerequisite"><span class="octicon octicon-link"></span></a>Prerequisite</h2>
+
+<p>You must know how to set up your Maps v2 from <a href="https://developers.google.com/maps/documentation/android/start">official article</a>.</p>
+
+<h2>
+<a name="set-up-library" class="anchor" href="#set-up-library"><span class="octicon octicon-link"></span></a>Set up library</h2>
+
+<p>Because the library project always contains the newest official library project, you just only import the library project to your Android project.</p>
+
+<h2>
+<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<h3>
+<a name="initialize" class="anchor" href="#initialize"><span class="octicon octicon-link"></span></a>Initialize</h3>
+
+<p>At first, you must use to <code>MapController#initialize(Context)</code> to initial Google Maps at <code>android.app.Application</code> and remember to update <code>AndroidManifest.xml</code>.</p>
+
+<div class="highlight highlight-java"><pre><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">()</span> <span class="o">{</span>
+  <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">();</span>
+
+  <span class="k">try</span> <span class="o">{</span>
+    <span class="n">MapController</span><span class="o">.</span><span class="na">initialize</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+  <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">GooglePlayServicesNotAvailableException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+    <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">common_google_play_services_enable_text</span><span class="o">,</span> <span class="n">Toast</span><span class="o">.</span><span class="na">Length_SHORT</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3>
+<a name="attach" class="anchor" href="#attach"><span class="octicon octicon-link"></span></a>Attach</h3>
+
+<p>When using it, You must create an instance to attach map from <code>MapView#getMap()</code> / <code>MapFragment#getMap()</code>.</p>
+
+<div class="highlight highlight-java"><pre><span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">MapController</span> <span class="n">mc</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MapController</span><span class="o">(</span><span class="n">mv</span><span class="o">.</span><span class="na">getMap</span><span class="o">());</span>
+<span class="o">}</span>
+</pre></div>
+
+<h3>
+<a name="show-my-location" class="anchor" href="#show-my-location"><span class="octicon octicon-link"></span></a>Show my location</h3>
+
+<p>Typically, you can use <code>MapController#showMyLocation()</code> to show your location.</p>
+
+<h3>
+<a name="move-to-my-location" class="anchor" href="#move-to-my-location"><span class="octicon octicon-link"></span></a>Move to my location</h3>
+
+<p>You can use <code>MapController#moveToMyLocation()</code> to move your current location. Also you can use <code>MapController#animateToMyLocation()</code> to move smoothly.</p>
+
+<h3>
+<a name="get-my-location" class="anchor" href="#get-my-location"><span class="octicon octicon-link"></span></a>Get my location</h3>
+
+<p>You can use <code>MapController#getMyLocation()</code> to get your current location.</p>
+
+<h3>
+<a name="tracking-my-location" class="anchor" href="#tracking-my-location"><span class="octicon octicon-link"></span></a>Tracking my location</h3>
+
+<p>If you want to track your location at runtime and do something. You can use <code>MapController#startTrackMyLocation()</code> like this:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">mc</span><span class="o">.</span><span class="na">startTrackMyLocation</span><span class="o">(</span><span class="k">new</span> <span class="nf">ChangeMyLocation</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">changed</span><span class="o">(</span><span class="n">GoogleMap</span> <span class="n">map</span><span class="o">,</span> <span class="n">Location</span> <span class="n">location</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">TrackingMyLocation</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="n">location</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+
+<p>And don't forget to stop tracking <code>MapController#stopTrackMyLocation()</code> when you leave the activity or service.</p>
+
+<h3>
+<a name="move-to-specific-location" class="anchor" href="#move-to-specific-location"><span class="octicon octicon-link"></span></a>Move to specific location</h3>
+
+<p>If you want to move to specific location, you can use <code>MapController#moveTo(LatLng)</code> or <code>MapController#animateTo(LatLng)</code> like this:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">LatLng</span> <span class="n">latLng</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">LatLng</span><span class="o">(</span><span class="mf">25.03338</span><span class="o">,</span> <span class="mf">121.56463</span><span class="o">);</span>
+
+<span class="n">mc</span><span class="o">.</span><span class="na">animateTo</span><span class="o">(</span><span class="n">latLng</span><span class="o">,</span> <span class="k">new</span> <span class="nf">ChangePosition</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">changed</span><span class="o">(</span><span class="n">GoogleMap</span> <span class="n">map</span><span class="o">,</span> <span class="n">CameraPosition</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">ShowSpecificLocation</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="n">position</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span> <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+
+<h3>
+<a name="add-marker" class="anchor" href="#add-marker"><span class="octicon octicon-link"></span></a>Add marker</h3>
+
+<p>You can use <code>MapController#addMarker(MarkerOptions)</code> to add marker to map, like this:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">mc</span><span class="o">.</span><span class="na">addMarker</span><span class="o">(</span><span class="n">opts</span><span class="o">,</span> <span class="k">new</span> <span class="nf">MarkerCallback</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">invokedMarker</span><span class="o">(</span><span class="n">GoogleMap</span> <span class="n">map</span><span class="o">,</span> <span class="n">Marker</span> <span class="n">marker</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Toast</span><span class="o">.</span><span class="na">makeText</span><span class="o">(</span><span class="n">AddMarker</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="n">marker</span><span class="o">.</span><span class="na">getId</span><span class="o">(),</span> <span class="n">Toast</span><span class="o">.</span><span class="na">LENGTH_SHORT</span><span class="o">).</span><span class="na">show</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+
+<h3>
+<a name="add-bulk-markers" class="anchor" href="#add-bulk-markers"><span class="octicon octicon-link"></span></a>Add bulk markers</h3>
+
+<p>You can also use <code>MapController#addMarkers(ArrayList&lt;MarkerOptions&gt;)</code> to add bulk markers to map.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/kewangtw/map-controller/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/kewangtw/map-controller/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/kewangtw/map-controller"></a> is maintained by <a href="https://github.com/kewangtw">kewangtw</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-2030167-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
