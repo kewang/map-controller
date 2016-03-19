@@ -1,25 +1,14 @@
 package tw.kewang.mapcontroller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -29,12 +18,16 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author kewang
@@ -53,7 +46,7 @@ public class MapController {
 	private GoogleMap map;
 	private ArrayList<Marker> markers;
 	private OnCameraChangeListener ccListener;
-	private LocationClient lClient;
+	private LocationSource lSource;
 
 	/**
 	 * initialize Google Maps
@@ -123,54 +116,21 @@ public class MapController {
 			showMyLocation();
 		}
 
-		lClient = new LocationClient(context, new ConnectionCallbacks() {
+		lSource = new LocationSource() {
 			@Override
-			public void onDisconnected() {
+			public void activate(OnLocationChangedListener listener) {
+				listener.onLocationChanged(map.getMyLocation());
 			}
 
 			@Override
-			public void onConnected(Bundle connectionHint) {
-				if (callback != null) {
-					callback.changed(map, lClient.getLastLocation(), true);
-				}
+			public void deactivate() {
 
-				LocationRequest request = LocationRequest.create()
-						.setInterval(interval).setFastestInterval(16)
-						.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-				if (numUpdates != 0) {
-					request.setNumUpdates(numUpdates);
-				}
-
-				lClient.requestLocationUpdates(request, new LocationListener() {
-					@Override
-					public void onLocationChanged(Location location) {
-						if (map != null) {
-							CameraUpdate latLng = CameraUpdateFactory
-									.newLatLng(new LatLng(location
-											.getLatitude(), location
-											.getLongitude()));
-
-							if (type == TrackType.TRACK_TYPE_MOVE) {
-								map.moveCamera(latLng);
-							} else if (type == TrackType.TRACK_TYPE_ANIMATE) {
-								map.animateCamera(latLng);
-							}
-						}
-
-						if (callback != null) {
-							callback.changed(map, location, false);
-						}
-					}
-				});
 			}
-		}, new OnConnectionFailedListener() {
-			@Override
-			public void onConnectionFailed(ConnectionResult result) {
-			}
-		});
+		};
 
-		lClient.connect();
+		if (map != null) {
+			map.setLocationSource(lSource);
+		}
 	}
 
 	/**
@@ -199,8 +159,8 @@ public class MapController {
 	 * stop tracking my current location
 	 */
 	public void stopTrackMyLocation() {
-		if (lClient != null) {
-			lClient.disconnect();
+		if (lSource != null) {
+			lSource.deactivate();
 		}
 	}
 
