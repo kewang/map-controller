@@ -1,7 +1,5 @@
 
-# Created by https://www.gitignore.io/api/ndro,android,intellij,gradle
-
-#!! ERROR: ndro is undefined. Use list command to see defined gitignore types !!#
+# Created by https://www.gitignore.io/api/android,gradle,intellij
 
 ### Android ###
 # Built application files
@@ -46,6 +44,23 @@ captures/
 
 ### Android Patch ###
 gen-external-apklibs
+
+
+### Gradle ###
+.gradle
+build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
 
 
 ### Intellij ###
@@ -94,20 +109,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-
-### Gradle ###
-.gradle
-build/
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Cache of project
-.gradletasknamecache
-
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
+### Intellij Patch ###
+*.iml
 
