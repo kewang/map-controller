@@ -181,7 +181,7 @@ public class MapController {
      * @param callback
      */
     public void startTrackMyLocation(ChangeMyLocation callback) {
-        startTrackMyLocation(null, 5000, 0, TrackType.TRACK_TYPE_NONE, callback);
+        startTrackMyLocation(map, 5000, 0, TrackType.TRACK_TYPE_ANIMATE, callback);
     }
 
     /**
@@ -193,8 +193,8 @@ public class MapController {
      */
     public void startTrackMyLocation(long interval, int numUpdates,
                                      ChangeMyLocation callback) {
-        startTrackMyLocation(null, interval, numUpdates,
-                TrackType.TRACK_TYPE_NONE, callback);
+        startTrackMyLocation(map, interval, numUpdates,
+                TrackType.TRACK_TYPE_ANIMATE, callback);
     }
 
     /**
