@@ -7,6 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -24,7 +25,9 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -38,6 +41,8 @@ import java.util.ArrayList;
  * @author kewang
  */
 public class MapController {
+    private static final String TAG = MapController.class.getSimpleName();
+
     public enum MapType {
         MAP_TYPE_NONE, MAP_TYPE_NORMAL, MAP_TYPE_SATELLITE, MAP_TYPE_TERRAIN, MAP_TYPE_HYBRID
     }
@@ -72,10 +77,29 @@ public class MapController {
      * @param map
      */
     public MapController(GoogleMap map) {
+        if (map == null) {
+            Log.e(TAG, "GoogleMap can't not be null.");
+
+            throw new RuntimeException("GoogleMap can't not be null.");
+        }
+
         this.map = map;
     }
 
-    public MapController() {
+    public MapController(MapView mapView, final MapControllerReady callback) {
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                MapController.this.map = googleMap;
+
+                if (callback != null) {
+                    callback.already(MapController.this);
+                }
+            }
+        });
+    }
+
+    private MapController() {
     }
 
     /**
@@ -1104,6 +1128,10 @@ public class MapController {
             animateTo(new LatLng(addresses.get(0).getLatitude(), addresses.get(
                     0).getLongitude()));
         }
+    }
+
+    public interface MapControllerReady {
+        public void already(MapController controller);
     }
 
     public interface ChangeMyLocation {
