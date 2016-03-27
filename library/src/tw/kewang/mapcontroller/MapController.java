@@ -167,6 +167,8 @@ public class MapController {
                                             .getLatitude(), location
                                             .getLongitude()));
 
+                            map.setMyLocationEnabled(true);
+
                             if (type == TrackType.TRACK_TYPE_MOVE) {
                                 map.moveCamera(latLng);
                             } else if (type == TrackType.TRACK_TYPE_ANIMATE) {
