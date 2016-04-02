@@ -1,3 +1,5 @@
+[![Release](https://jitpack.io/v/kewang/map-controller.svg)](https://jitpack.io/#kewang/map-controller)
+
 # map-controller
 
 Control Google Maps v2 for Android
