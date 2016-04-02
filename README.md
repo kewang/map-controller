@@ -8,9 +8,42 @@ Control Google Maps v2 for Android
 
 You must know how to set up your Maps v2 from [official article](https://developers.google.com/maps/documentation/android/start).
 
-## Set up library
+## Dependency
 
-Because the library project always contains the newest official library project, you just only import the library project to your Android project.
+### Gradle
+
+```gradle
+allprojects {
+  repositories {
+    maven { url "https://jitpack.io" }
+  }
+}
+```
+
+```gradle
+dependencies {
+  compile 'com.github.kewang:map-controller:v2.0.0'
+}
+```
+
+### Maven
+
+```xml
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+```
+
+```xml
+<dependency>
+  <groupId>com.github.kewang</groupId>
+  <artifactId>map-controller</artifactId>
+  <version>v2.0.0</version>
+</dependency>
+```
 
 ## How to use
 
@@ -21,15 +54,15 @@ At first, you must use to `MapController#initialize(Context)` to initial Google 
 ```java
 @Override
 public void onCreate() {
-  super.onCreate();
+    super.onCreate();
 
-  try {
-    MapController.initialize(this);
-  } catch (GooglePlayServicesNotAvailableException e) {
-    e.printStackTrace();
+    try {
+        MapController.initialize(this);
+    } catch (GooglePlayServicesNotAvailableException e) {
+        e.printStackTrace();
 
-    Toast.makeText(this, R.string.common_google_play_services_enable_text, Toast.Length_SHORT).show();
-  }
+        Toast.makeText(this, R.string.common_google_play_services_enable_text, Toast.Length_SHORT).show();
+    }
 }
 ```
 
@@ -38,9 +71,25 @@ public void onCreate() {
 When using it, You must create an instance to attach map from `MapView#getMap()` / `MapFragment#getMap()`.
 
 ```java
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-	MapController mc = new MapController(mv.getMap());
+public class MainActivity extends Activity implements MapControllerReady {
+    private MapView mv;
+    private MapController mc;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.main);
+        
+        mv = (MapView) findViewById(R.id.map);
+        
+        mc = new MapController(mv, this);
+        // or use below statement
+        // new MapController(mv, this);
+    }
+
+    @Override
+    public void already(MapController controller) {
+        controller.moveToMyLocation();
+    }
 }
 ```
 
@@ -62,10 +111,10 @@ If you want to track your location at runtime and do something. You can use `Map
 
 ```java
 mc.startTrackMyLocation(new ChangeMyLocation() {
-	@Override
-	public void changed(GoogleMap map, Location location) {
-		Toast.makeText(TrackingMyLocation.this, location.toString(), Toast.LENGTH_SHORT).show();
-	}
+    @Override
+    public void changed(GoogleMap map, Location location) {
+        Toast.makeText(TrackingMyLocation.this, location.toString(), Toast.LENGTH_SHORT).show();
+    }
 });
 ```
 
@@ -79,10 +128,10 @@ If you want to move to specific location, you can use `MapController#moveTo(LatL
 LatLng latLng = new LatLng(25.03338, 121.56463);
 
 mc.animateTo(latLng, new ChangePosition() {
-	@Override
-	public void changed(GoogleMap map, CameraPosition position) {
-		Toast.makeText(ShowSpecificLocation.this, position.toString(), Toast.LENGTH_SHORT).show();
-	}
+    @Override
+    public void changed(GoogleMap map, CameraPosition position) {
+        Toast.makeText(ShowSpecificLocation.this, position.toString(), Toast.LENGTH_SHORT).show();
+    }
 });
 ```
 
@@ -92,10 +141,10 @@ You can use `MapController#addMarker(MarkerOptions)` to add marker to map, like 
 
 ```java
 mc.addMarker(opts, new MarkerCallback() {
-	@Override
-	public void invokedMarker(GoogleMap map, Marker marker) {
-		Toast.makeText(AddMarker.this, marker.getId(), Toast.LENGTH_SHORT).show();
-	}
+    @Override
+    public void invokedMarker(GoogleMap map, Marker marker) {
+        Toast.makeText(AddMarker.this, marker.getId(), Toast.LENGTH_SHORT).show();
+    }
 });
 ```
 
