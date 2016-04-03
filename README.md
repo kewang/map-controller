@@ -72,7 +72,7 @@ public void onCreate() {
 
 ### Attach
 
-When using it, You must create an instance to attach map from `MapView#getMap()` / `MapFragment#getMap()`.
+When using it, You must create an instance to attach map from `MapView` / `MapFragment`'s instance.
 
 ```java
 public class MainActivity extends Activity implements MapControllerReady {
@@ -116,7 +116,7 @@ If you want to track your location at runtime and do something. You can use `Map
 ```java
 mc.startTrackMyLocation(new ChangeMyLocation() {
     @Override
-    public void changed(GoogleMap map, Location location) {
+    public void changed(GoogleMap map, Location location, boolean lastLocation) {
         Toast.makeText(TrackingMyLocation.this, location.toString(), Toast.LENGTH_SHORT).show();
     }
 });
