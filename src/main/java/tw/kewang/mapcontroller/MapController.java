@@ -25,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,35 +43,11 @@ import java.util.ArrayList;
  */
 public class MapController {
     private static final String TAG = MapController.class.getSimpleName();
-
-    public enum MapType {
-        MAP_TYPE_NONE, MAP_TYPE_NORMAL, MAP_TYPE_SATELLITE, MAP_TYPE_TERRAIN, MAP_TYPE_HYBRID
-    }
-
-    public enum TrackType {
-        TRACK_TYPE_MOVE, TRACK_TYPE_ANIMATE, TRACK_TYPE_NONE
-    }
-
     private static Context context;
-
     private GoogleMap map;
     private ArrayList<Marker> markers;
     private OnCameraChangeListener ccListener;
-    private GoogleApiClient mGoogleApiClient;
-
-    /**
-     * initialize Google Maps
-     *
-     * @param context
-     * @throws GooglePlayServicesNotAvailableException
-     */
-    public static void initialize(Context context)
-            throws GooglePlayServicesNotAvailableException {
-        MapController.context = context;
-
-        MapsInitializer.initialize(context);
-    }
-
+    private GoogleApiClient googleApiClient;
     /**
      * attach Google Maps
      *
@@ -85,9 +62,21 @@ public class MapController {
 
         this.map = map;
     }
-
     public MapController(MapView mapView, final MapControllerReady callback) {
         mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                MapController.this.map = googleMap;
+
+                if (callback != null) {
+                    callback.already(MapController.this);
+                }
+            }
+        });
+    }
+
+    public MapController(MapFragment mapFragment, final MapControllerReady callback) {
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 MapController.this.map = googleMap;
@@ -103,6 +92,19 @@ public class MapController {
     }
 
     /**
+     * initialize Google Maps
+     *
+     * @param context
+     * @throws GooglePlayServicesNotAvailableException
+     */
+    public static void initialize(Context context)
+            throws GooglePlayServicesNotAvailableException {
+        MapController.context = context;
+
+        MapsInitializer.initialize(context);
+    }
+
+    /**
      * return map's instance
      *
      * @return
@@ -112,21 +114,21 @@ public class MapController {
     }
 
     /**
-     * sets the type of map tiles that should be displayed
-     *
-     * @param type
-     */
-    public void setType(MapType type) {
-        map.setMapType(type.ordinal());
-    }
-
-    /**
      * return the type of map that's currently displayed.
      *
      * @return
      */
     public MapType getType() {
         return MapType.valueOf(String.valueOf(map.getMapType()));
+    }
+
+    /**
+     * sets the type of map tiles that should be displayed
+     *
+     * @param type
+     */
+    public void setType(MapType type) {
+        map.setMapType(type.ordinal());
     }
 
     /**
@@ -144,7 +146,7 @@ public class MapController {
         GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(Bundle bundle) {
-                Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
                 if (callback != null) {
                     callback.changed(map, location, true);
@@ -158,7 +160,7 @@ public class MapController {
                     request.setNumUpdates(numUpdates);
                 }
 
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, new LocationListener() {
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
                         if (map != null) {
@@ -189,16 +191,16 @@ public class MapController {
             }
         };
 
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(context)
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(connectionCallbacks)
                     .addApi(LocationServices.API)
                     .build();
         }
 
-        mGoogleApiClient.registerConnectionCallbacks(connectionCallbacks);
+        googleApiClient.registerConnectionCallbacks(connectionCallbacks);
 
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
     }
 
     /**
@@ -227,8 +229,8 @@ public class MapController {
      * stop tracking my current location
      */
     public void stopTrackMyLocation() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
+        if (googleApiClient != null && googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
         }
     }
 
@@ -1130,6 +1132,14 @@ public class MapController {
             animateTo(new LatLng(addresses.get(0).getLatitude(), addresses.get(
                     0).getLongitude()));
         }
+    }
+
+    public enum MapType {
+        MAP_TYPE_NONE, MAP_TYPE_NORMAL, MAP_TYPE_SATELLITE, MAP_TYPE_TERRAIN, MAP_TYPE_HYBRID
+    }
+
+    public enum TrackType {
+        TRACK_TYPE_MOVE, TRACK_TYPE_ANIMATE, TRACK_TYPE_NONE
     }
 
     public interface MapControllerReady {
