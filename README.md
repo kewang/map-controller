@@ -4,6 +4,10 @@
 
 Control Google Maps v2 for Android
 
+## Samples
+
+https://github.com/kewang/map-controller-samples
+
 ## Prerequisite
 
 You must know how to set up your Maps v2 from [official article](https://developers.google.com/maps/documentation/android/start).
