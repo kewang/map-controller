@@ -26,7 +26,7 @@ allprojects {
 
 ```gradle
 dependencies {
-  compile 'com.github.kewang:map-controller:v2.0.0'
+  compile 'com.github.kewang:map-controller:v2.1.0'
 }
 ```
 
@@ -45,7 +45,7 @@ dependencies {
 <dependency>
   <groupId>com.github.kewang</groupId>
   <artifactId>map-controller</artifactId>
-  <version>v2.0.0</version>
+  <version>v2.1.0</version>
 </dependency>
 ```
 
