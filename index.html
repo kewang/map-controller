@@ -92,7 +92,7 @@
 <h3>
 <a id="attach" class="anchor" href="#attach" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Attach</h3>
 
-<p>When using it, You must create an instance to attach map from <code>MapView#getMap()</code> / <code>MapFragment#getMap()</code>.</p>
+<p>When using it, You must create an instance to attach map from <code>MapView</code> / <code>MapFragment</code>'s instance.</p>
 
 <div class="highlight highlight-source-java"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">MainActivity</span> <span class="pl-k">extends</span> <span class="pl-e">Activity</span> <span class="pl-k">implements</span> <span class="pl-e">MapControllerReady</span> {
     <span class="pl-k">private</span> <span class="pl-smi">MapView</span> mv;
@@ -137,7 +137,7 @@
 
 <div class="highlight highlight-source-java"><pre>mc<span class="pl-k">.</span>startTrackMyLocation(<span class="pl-k">new</span> <span class="pl-smi">ChangeMyLocation</span>() {
     <span class="pl-k">@Override</span>
-    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">changed</span>(<span class="pl-smi">GoogleMap</span> <span class="pl-v">map</span>, <span class="pl-smi">Location</span> <span class="pl-v">location</span>) {
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">changed</span>(<span class="pl-smi">GoogleMap</span> <span class="pl-v">map</span>, <span class="pl-smi">Location</span> <span class="pl-v">location</span>, <span class="pl-k">boolean</span> <span class="pl-v">lastLocation</span>) {
         <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(<span class="pl-smi">TrackingMyLocation</span><span class="pl-k">.</span><span class="pl-v">this</span>, location<span class="pl-k">.</span>toString(), <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_SHORT</span>)<span class="pl-k">.</span>show();
     }
 });</pre></div>
