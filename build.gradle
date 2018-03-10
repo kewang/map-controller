@@ -6,6 +6,7 @@ group="com.github.kewang"
 buildscript {
     repositories {
         mavenCentral()
+        google()
     }
 
     dependencies {
