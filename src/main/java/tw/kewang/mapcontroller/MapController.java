@@ -128,9 +128,7 @@ public class MapController {
      * @param type
      * @param callback
      */
-    public void startTrackMyLocation(final GoogleMap map, final long interval,
-                                     final int numUpdates, final TrackType type,
-                                     final ChangeMyLocation callback) {
+    public void startTrackMyLocation(GoogleMap map, long interval, int numUpdates, TrackType type, ChangeMyLocation callback) {
         GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(Bundle bundle) {
@@ -140,9 +138,7 @@ public class MapController {
                     callback.changed(map, location, true);
                 }
 
-                LocationRequest request = LocationRequest.create()
-                        .setInterval(interval).setFastestInterval(16)
-                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                LocationRequest request = LocationRequest.create().setInterval(interval).setFastestInterval(16).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
                 if (numUpdates != 0) {
                     request.setNumUpdates(numUpdates);
@@ -150,10 +146,7 @@ public class MapController {
 
                 LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, location1 -> {
                     if (map != null) {
-                        CameraUpdate latLng = CameraUpdateFactory
-                                .newLatLng(new LatLng(location1
-                                        .getLatitude(), location1
-                                        .getLongitude()));
+                        CameraUpdate latLng = CameraUpdateFactory.newLatLng(new LatLng(location1.getLatitude(), location1.getLongitude()));
 
                         map.setMyLocationEnabled(true);
 
@@ -177,10 +170,7 @@ public class MapController {
         };
 
         if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(context)
-                    .addConnectionCallbacks(connectionCallbacks)
-                    .addApi(LocationServices.API)
-                    .build();
+            googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallbacks).addApi(LocationServices.API).build();
         }
 
         googleApiClient.registerConnectionCallbacks(connectionCallbacks);
@@ -204,10 +194,8 @@ public class MapController {
      * @param numUpdates
      * @param callback
      */
-    public void startTrackMyLocation(long interval, int numUpdates,
-                                     ChangeMyLocation callback) {
-        startTrackMyLocation(map, interval, numUpdates,
-                TrackType.TRACK_TYPE_ANIMATE, callback);
+    public void startTrackMyLocation(long interval, int numUpdates, ChangeMyLocation callback) {
+        startTrackMyLocation(map, interval, numUpdates, TrackType.TRACK_TYPE_ANIMATE, callback);
     }
 
     /**
@@ -241,8 +229,7 @@ public class MapController {
      * @param callback
      */
     public void animateToMyLocation(ChangeMyLocation callback) {
-        startTrackMyLocation(map, 5000, 1, TrackType.TRACK_TYPE_ANIMATE,
-                callback);
+        startTrackMyLocation(map, 5000, 1, TrackType.TRACK_TYPE_ANIMATE, callback);
     }
 
     /**
@@ -324,8 +311,7 @@ public class MapController {
      * @param callback
      */
     public void animateTo(double lat, double lng, ChangePosition callback) {
-        animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
-                callback);
+        animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom, callback);
     }
 
     /**
@@ -335,8 +321,7 @@ public class MapController {
      * @param lng
      */
     public void animateTo(double lat, double lng) {
-        animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
-                null);
+        animateTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom, null);
     }
 
     /**
@@ -368,8 +353,7 @@ public class MapController {
      * @param zoom
      * @param callback
      */
-    public void animateTo(double lat, double lng, int zoom,
-                          ChangePosition callback) {
+    public void animateTo(double lat, double lng, int zoom, ChangePosition callback) {
         animateTo(new LatLng(lat, lng), zoom, callback);
     }
 
@@ -424,8 +408,7 @@ public class MapController {
      * @param callback
      */
     public void moveTo(double lat, double lng, ChangePosition callback) {
-        moveTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom,
-                callback);
+        moveTo(new LatLng(lat, lng), (int) map.getCameraPosition().zoom, callback);
     }
 
     /**
@@ -478,8 +461,7 @@ public class MapController {
      * @param smooth
      * @param callback
      */
-    public void setBounds(LatLng southwest, LatLng northeast, int padding,
-                          boolean smooth, final ChangePosition callback) {
+    public void setBounds(LatLng southwest, LatLng northeast, int padding, boolean smooth, final ChangePosition callback) {
         if (ccListener == null) {
             ccListener = position -> {
                 map.setOnCameraChangeListener(null);
@@ -495,11 +477,9 @@ public class MapController {
         }
 
         if (smooth) {
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(
-                    new LatLngBounds(southwest, northeast), padding));
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(southwest, northeast), padding));
         } else {
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(
-                    new LatLngBounds(southwest, northeast), padding));
+            map.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(southwest, northeast), padding));
         }
     }
 
@@ -509,8 +489,7 @@ public class MapController {
      * @param padding
      * @param smooth
      */
-    public void setBounds(LatLng southwest, LatLng northeast, int padding,
-                          boolean smooth) {
+    public void setBounds(LatLng southwest, LatLng northeast, int padding, boolean smooth) {
         setBounds(southwest, northeast, padding, smooth, null);
     }
 
@@ -531,10 +510,8 @@ public class MapController {
      * @param padding
      * @param smooth
      */
-    public void setBounds(double swLat, double swLng, double neLat,
-                          double neLng, int padding, boolean smooth) {
-        setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
-                smooth, null);
+    public void setBounds(double swLat, double swLng, double neLat, double neLng, int padding, boolean smooth) {
+        setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding, smooth, null);
     }
 
     /**
@@ -544,10 +521,8 @@ public class MapController {
      * @param neLng
      * @param padding
      */
-    public void setBounds(double swLat, double swLng, double neLat,
-                          double neLng, int padding) {
-        setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
-                true, null);
+    public void setBounds(double swLat, double swLng, double neLat, double neLng, int padding) {
+        setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding, true, null);
     }
 
     /**
@@ -558,10 +533,8 @@ public class MapController {
      * @param padding
      * @param callback
      */
-    public void setBounds(double swLat, double swLng, double neLat,
-                          double neLng, int padding, ChangePosition callback) {
-        setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding,
-                true, callback);
+    public void setBounds(double swLat, double swLng, double neLat, double neLng, int padding, ChangePosition callback) {
+        setBounds(new LatLng(swLat, swLng), new LatLng(neLat, neLng), padding, true, callback);
     }
 
     /**
@@ -669,7 +642,7 @@ public class MapController {
      * {@link #setInfoWindowAdapter(InfoWindowAdapter)}
      */
     @Deprecated
-    public void setInfoWindow(final View v) {
+    public void setInfoWindow(View v) {
         map.setInfoWindowAdapter(new InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -692,7 +665,7 @@ public class MapController {
      * {@link #setInfoWindowAdapter(InfoWindowAdapter)}
      */
     @Deprecated
-    public void setInfoContents(final View v) {
+    public void setInfoContents(View v) {
         map.setInfoWindowAdapter(new InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -760,7 +733,7 @@ public class MapController {
      *
      * @param callback
      */
-    public void whenMarkerDrag(final MarkerDrag callback) {
+    public void whenMarkerDrag(MarkerDrag callback) {
         map.setOnMarkerDragListener(new OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -853,8 +826,7 @@ public class MapController {
      * @return
      */
     public Marker addMarker(double lat, double lng) {
-        return addMarker(new MarkerOptions().position(new LatLng(lat, lng)),
-                null);
+        return addMarker(new MarkerOptions().position(new LatLng(lat, lng)), null);
     }
 
     /**
@@ -865,8 +837,7 @@ public class MapController {
      * @param callback
      * @return
      */
-    public Marker addMarker(LatLng latLng, MarkerOptions opts,
-                            MarkerCallback callback) {
+    public Marker addMarker(LatLng latLng, MarkerOptions opts, MarkerCallback callback) {
         return addMarker(opts.position(latLng), callback);
     }
 
@@ -879,8 +850,7 @@ public class MapController {
      * @param callback
      * @return
      */
-    public Marker addMarker(double lat, double lng, MarkerOptions opts,
-                            MarkerCallback callback) {
+    public Marker addMarker(double lat, double lng, MarkerOptions opts, MarkerCallback callback) {
         return addMarker(opts.position(new LatLng(lat, lng)), callback);
     }
 
@@ -904,8 +874,7 @@ public class MapController {
      * @return
      */
     public Marker addMarker(double lat, double lng, MarkerCallback callback) {
-        return addMarker(new MarkerOptions().position(new LatLng(lat, lng)),
-                callback);
+        return addMarker(new MarkerOptions().position(new LatLng(lat, lng)), callback);
     }
 
     /**
@@ -914,8 +883,7 @@ public class MapController {
      * @param allOpts
      * @param callback
      */
-    public void addMarkers(ArrayList<MarkerOptions> allOpts,
-                           MarkerCallback callback) {
+    public void addMarkers(ArrayList<MarkerOptions> allOpts, MarkerCallback callback) {
         if (markers == null) {
             markers = new ArrayList<>();
         }
@@ -999,10 +967,9 @@ public class MapController {
         ArrayList<Address> addresses = new ArrayList<>();
 
         try {
-            addresses = (ArrayList<Address>) geocoder.getFromLocationName(
-                    location, 5);
+            addresses = (ArrayList<Address>) geocoder.getFromLocationName(location, 5);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
 
         findCallback(callback, addresses);
@@ -1042,10 +1009,9 @@ public class MapController {
                 Geocoder geocoder = new Geocoder(context);
 
                 try {
-                    addresses = (ArrayList<Address>) geocoder
-                            .getFromLocationName(location, 5);
+                    addresses = (ArrayList<Address>) geocoder.getFromLocationName(location, 5);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage());
                 }
 
                 return null;
@@ -1077,8 +1043,7 @@ public class MapController {
         } else {
             for (Address address : addresses) {
                 MarkerOptions opts = new MarkerOptions();
-                LatLng latLng = new LatLng(address.getLatitude(),
-                        address.getLongitude());
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
                 opts.position(latLng);
                 opts.title(address.toString());
@@ -1087,8 +1052,7 @@ public class MapController {
                 addMarker(opts);
             }
 
-            animateTo(new LatLng(addresses.get(0).getLatitude(), addresses.get(
-                    0).getLongitude()));
+            animateTo(new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude()));
         }
     }
 
