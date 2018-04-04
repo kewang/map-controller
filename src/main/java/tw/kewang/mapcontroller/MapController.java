@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -19,10 +18,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
@@ -153,27 +148,24 @@ public class MapController {
                     request.setNumUpdates(numUpdates);
                 }
 
-                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        if (map != null) {
-                            CameraUpdate latLng = CameraUpdateFactory
-                                    .newLatLng(new LatLng(location
-                                            .getLatitude(), location
-                                            .getLongitude()));
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, location1 -> {
+                    if (map != null) {
+                        CameraUpdate latLng = CameraUpdateFactory
+                                .newLatLng(new LatLng(location1
+                                        .getLatitude(), location1
+                                        .getLongitude()));
 
-                            map.setMyLocationEnabled(true);
+                        map.setMyLocationEnabled(true);
 
-                            if (type == TrackType.TRACK_TYPE_MOVE) {
-                                map.moveCamera(latLng);
-                            } else if (type == TrackType.TRACK_TYPE_ANIMATE) {
-                                map.animateCamera(latLng);
-                            }
+                        if (type == TrackType.TRACK_TYPE_MOVE) {
+                            map.moveCamera(latLng);
+                        } else if (type == TrackType.TRACK_TYPE_ANIMATE) {
+                            map.animateCamera(latLng);
                         }
+                    }
 
-                        if (callback != null) {
-                            callback.changed(map, location, false);
-                        }
+                    if (callback != null) {
+                        callback.changed(map, location1, false);
                     }
                 });
             }
@@ -289,16 +281,13 @@ public class MapController {
      */
     public void animateTo(LatLng latLng, int zoom, final ChangePosition callback) {
         if (ccListener == null) {
-            ccListener = new OnCameraChangeListener() {
-                @Override
-                public void onCameraChange(CameraPosition position) {
-                    map.setOnCameraChangeListener(null);
+            ccListener = position -> {
+                map.setOnCameraChangeListener(null);
 
-                    ccListener = null;
+                ccListener = null;
 
-                    if (callback != null) {
-                        callback.changed(map, position);
-                    }
+                if (callback != null) {
+                    callback.changed(map, position);
                 }
             };
 
@@ -392,16 +381,13 @@ public class MapController {
      */
     public void moveTo(LatLng latLng, int zoom, final ChangePosition callback) {
         if (ccListener == null) {
-            ccListener = new OnCameraChangeListener() {
-                @Override
-                public void onCameraChange(CameraPosition position) {
-                    map.setOnCameraChangeListener(null);
+            ccListener = position -> {
+                map.setOnCameraChangeListener(null);
 
-                    ccListener = null;
+                ccListener = null;
 
-                    if (callback != null) {
-                        callback.changed(map, position);
-                    }
+                if (callback != null) {
+                    callback.changed(map, position);
                 }
             };
 
@@ -495,16 +481,13 @@ public class MapController {
     public void setBounds(LatLng southwest, LatLng northeast, int padding,
                           boolean smooth, final ChangePosition callback) {
         if (ccListener == null) {
-            ccListener = new OnCameraChangeListener() {
-                @Override
-                public void onCameraChange(CameraPosition position) {
-                    map.setOnCameraChangeListener(null);
+            ccListener = position -> {
+                map.setOnCameraChangeListener(null);
 
-                    ccListener = null;
+                ccListener = null;
 
-                    if (callback != null) {
-                        callback.changed(map, position);
-                    }
+                if (callback != null) {
+                    callback.changed(map, position);
                 }
             };
 
@@ -724,7 +707,7 @@ public class MapController {
     }
 
     /**
-     * set the info-window adpater
+     * set the info-window adapter
      *
      * @param adapter
      */
@@ -738,12 +721,7 @@ public class MapController {
      * @param callback
      */
     public void whenMapClick(final ClickCallback callback) {
-        map.setOnMapClickListener(new OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                callback.clicked(map, latLng);
-            }
-        });
+        map.setOnMapClickListener(latLng -> callback.clicked(map, latLng));
     }
 
     /**
@@ -752,12 +730,7 @@ public class MapController {
      * @param callback
      */
     public void whenMapLongClick(final ClickCallback callback) {
-        map.setOnMapLongClickListener(new OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                callback.clicked(map, latLng);
-            }
-        });
+        map.setOnMapLongClickListener(latLng -> callback.clicked(map, latLng));
     }
 
     /**
@@ -766,12 +739,7 @@ public class MapController {
      * @param callback
      */
     public void whenInfoWindowClick(final MarkerCallback callback) {
-        map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                callback.invokedMarker(map, marker);
-            }
-        });
+        map.setOnInfoWindowClickListener(marker -> callback.invokedMarker(map, marker));
     }
 
     /**
@@ -780,13 +748,10 @@ public class MapController {
      * @param callback
      */
     public void whenMarkerClick(final MarkerCallback callback) {
-        map.setOnMarkerClickListener(new OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                callback.invokedMarker(map, marker);
+        map.setOnMarkerClickListener(marker -> {
+            callback.invokedMarker(map, marker);
 
-                return true;
-            }
+            return true;
         });
     }
 
@@ -825,7 +790,7 @@ public class MapController {
         Marker marker = map.addMarker(opts);
 
         if (markers == null) {
-            markers = new ArrayList<Marker>();
+            markers = new ArrayList<>();
         }
 
         markers.add(marker);
@@ -952,7 +917,7 @@ public class MapController {
     public void addMarkers(ArrayList<MarkerOptions> allOpts,
                            MarkerCallback callback) {
         if (markers == null) {
-            markers = new ArrayList<Marker>();
+            markers = new ArrayList<>();
         }
 
         for (MarkerOptions opts : allOpts) {
@@ -1031,7 +996,7 @@ public class MapController {
      */
     public void find(String location, FindResult callback) {
         Geocoder geocoder = new Geocoder(context);
-        ArrayList<Address> addresses = new ArrayList<Address>();
+        ArrayList<Address> addresses = new ArrayList<>();
 
         try {
             addresses = (ArrayList<Address>) geocoder.getFromLocationName(
@@ -1136,35 +1101,34 @@ public class MapController {
     }
 
     public interface MapControllerReady {
-        public void already(MapController controller);
+        void already(MapController controller);
     }
 
     public interface ChangeMyLocation {
-        public void changed(GoogleMap map, Location location,
-                            boolean lastLocation);
+        void changed(GoogleMap map, Location location, boolean lastLocation);
     }
 
     public interface ChangePosition {
-        public void changed(GoogleMap map, CameraPosition position);
+        void changed(GoogleMap map, CameraPosition position);
     }
 
     public interface ClickCallback {
-        public void clicked(GoogleMap map, LatLng latLng);
+        void clicked(GoogleMap map, LatLng latLng);
     }
 
     public interface MarkerCallback {
-        public void invokedMarker(GoogleMap map, Marker marker);
+        void invokedMarker(GoogleMap map, Marker marker);
     }
 
     public interface MarkerDrag {
-        public void markerDragStart(GoogleMap map, Marker marker);
+        void markerDragStart(GoogleMap map, Marker marker);
 
-        public void markerDrag(GoogleMap map, Marker marker);
+        void markerDrag(GoogleMap map, Marker marker);
 
-        public void markerDragEnd(GoogleMap map, Marker marker);
+        void markerDragEnd(GoogleMap map, Marker marker);
     }
 
     public interface FindResult {
-        public void found(GoogleMap map, ArrayList<Address> addresses);
+        void found(GoogleMap map, ArrayList<Address> addresses);
     }
 }
