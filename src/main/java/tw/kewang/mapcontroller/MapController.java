@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -28,7 +27,6 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -43,17 +41,19 @@ import java.util.ArrayList;
  */
 public class MapController {
     private static final String TAG = MapController.class.getSimpleName();
-    private static Context context;
+
+    private Context context;
     private GoogleMap map;
     private ArrayList<Marker> markers;
     private OnCameraChangeListener ccListener;
     private GoogleApiClient googleApiClient;
+
     /**
      * attach Google Maps
      *
      * @param map
      */
-    public MapController(GoogleMap map) {
+    public MapController(Context context, GoogleMap map) {
         if (map == null) {
             Log.e(TAG, "GoogleMap can't not be null.");
 
@@ -62,28 +62,25 @@ public class MapController {
 
         this.map = map;
     }
-    public MapController(MapView mapView, final MapControllerReady callback) {
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                MapController.this.map = googleMap;
 
-                if (callback != null) {
-                    callback.already(MapController.this);
-                }
+    public MapController(MapView mapView, MapControllerReady callback) {
+        mapView.getMapAsync(googleMap -> {
+            this.map = googleMap;
+            this.context = mapView.getContext();
+
+            if (callback != null) {
+                callback.already(this);
             }
         });
     }
 
-    public MapController(MapFragment mapFragment, final MapControllerReady callback) {
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                MapController.this.map = googleMap;
+    public MapController(MapFragment mapFragment, MapControllerReady callback) {
+        mapFragment.getMapAsync(googleMap -> {
+            this.map = googleMap;
+            this.context = mapFragment.getContext();
 
-                if (callback != null) {
-                    callback.already(MapController.this);
-                }
+            if (callback != null) {
+                callback.already(this);
             }
         });
     }
@@ -95,12 +92,8 @@ public class MapController {
      * initialize Google Maps
      *
      * @param context
-     * @throws GooglePlayServicesNotAvailableException
      */
-    public static void initialize(Context context)
-            throws GooglePlayServicesNotAvailableException {
-        MapController.context = context;
-
+    public static void initialize(Context context) {
         MapsInitializer.initialize(context);
     }
 
