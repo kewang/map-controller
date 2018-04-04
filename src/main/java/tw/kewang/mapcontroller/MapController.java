@@ -17,7 +17,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
@@ -40,7 +40,7 @@ public class MapController {
     private Context context;
     private GoogleMap map;
     private ArrayList<Marker> markers;
-    private OnCameraChangeListener ccListener;
+    private OnCameraIdleListener cameraIdleListener;
     private GoogleApiClient googleApiClient;
 
     /**
@@ -266,19 +266,19 @@ public class MapController {
      * @param zoom
      * @param callback
      */
-    public void animateTo(LatLng latLng, int zoom, final ChangePosition callback) {
-        if (ccListener == null) {
-            ccListener = position -> {
-                map.setOnCameraChangeListener(null);
+    public void animateTo(LatLng latLng, int zoom, ChangePosition callback) {
+        if (cameraIdleListener == null) {
+            cameraIdleListener = () -> {
+                map.setOnCameraIdleListener(null);
 
-                ccListener = null;
+                cameraIdleListener = null;
 
                 if (callback != null) {
-                    callback.changed(map, position);
+                    callback.changed(map, map.getCameraPosition());
                 }
             };
 
-            map.setOnCameraChangeListener(ccListener);
+            map.setOnCameraIdleListener(cameraIdleListener);
         }
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -363,19 +363,19 @@ public class MapController {
      * @param latLng
      * @param callback
      */
-    public void moveTo(LatLng latLng, int zoom, final ChangePosition callback) {
-        if (ccListener == null) {
-            ccListener = position -> {
-                map.setOnCameraChangeListener(null);
+    public void moveTo(LatLng latLng, int zoom, ChangePosition callback) {
+        if (cameraIdleListener == null) {
+            cameraIdleListener = () -> {
+                map.setOnCameraIdleListener(null);
 
-                ccListener = null;
+                cameraIdleListener = null;
 
                 if (callback != null) {
-                    callback.changed(map, position);
+                    callback.changed(map, map.getCameraPosition());
                 }
             };
 
-            map.setOnCameraChangeListener(ccListener);
+            map.setOnCameraIdleListener(cameraIdleListener);
         }
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -461,19 +461,19 @@ public class MapController {
      * @param smooth
      * @param callback
      */
-    public void setBounds(LatLng southwest, LatLng northeast, int padding, boolean smooth, final ChangePosition callback) {
-        if (ccListener == null) {
-            ccListener = position -> {
-                map.setOnCameraChangeListener(null);
+    public void setBounds(LatLng southwest, LatLng northeast, int padding, boolean smooth, ChangePosition callback) {
+        if (cameraIdleListener == null) {
+            cameraIdleListener = () -> {
+                map.setOnCameraIdleListener(null);
 
-                ccListener = null;
+                cameraIdleListener = null;
 
                 if (callback != null) {
-                    callback.changed(map, position);
+                    callback.changed(map, map.getCameraPosition());
                 }
             };
 
-            map.setOnCameraChangeListener(ccListener);
+            map.setOnCameraIdleListener(cameraIdleListener);
         }
 
         if (smooth) {
