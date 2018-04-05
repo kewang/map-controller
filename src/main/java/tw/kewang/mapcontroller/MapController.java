@@ -6,12 +6,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,7 +42,8 @@ public class MapController {
     private GoogleMap map;
     private ArrayList<Marker> markers;
     private OnCameraIdleListener cameraIdleListener;
-    private GoogleApiClient googleApiClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationCallback locationCallback;
 
     /**
      * attach Google Maps
@@ -129,53 +131,38 @@ public class MapController {
      * @param callback
      */
     public void startTrackMyLocation(GoogleMap map, long interval, int numUpdates, TrackType type, ChangeMyLocation callback) {
-        GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+
+        LocationRequest request = LocationRequest.create().setInterval(interval).setFastestInterval(16).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (numUpdates != 0) {
+            request.setNumUpdates(numUpdates);
+        }
+
+        locationCallback = new LocationCallback() {
             @Override
-            public void onConnected(Bundle bundle) {
-                Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            public void onLocationResult(LocationResult locationResult) {
+                Location location1 = locationResult.getLastLocation();
+
+                if (map != null) {
+                    CameraUpdate latLng = CameraUpdateFactory.newLatLng(new LatLng(location1.getLatitude(), location1.getLongitude()));
+
+                    map.setMyLocationEnabled(true);
+
+                    if (type == TrackType.TRACK_TYPE_MOVE) {
+                        map.moveCamera(latLng);
+                    } else if (type == TrackType.TRACK_TYPE_ANIMATE) {
+                        map.animateCamera(latLng);
+                    }
+                }
 
                 if (callback != null) {
-                    callback.changed(map, location, true);
+                    callback.changed(map, location1);
                 }
-
-                LocationRequest request = LocationRequest.create().setInterval(interval).setFastestInterval(16).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-                if (numUpdates != 0) {
-                    request.setNumUpdates(numUpdates);
-                }
-
-                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, location1 -> {
-                    if (map != null) {
-                        CameraUpdate latLng = CameraUpdateFactory.newLatLng(new LatLng(location1.getLatitude(), location1.getLongitude()));
-
-                        map.setMyLocationEnabled(true);
-
-                        if (type == TrackType.TRACK_TYPE_MOVE) {
-                            map.moveCamera(latLng);
-                        } else if (type == TrackType.TRACK_TYPE_ANIMATE) {
-                            map.animateCamera(latLng);
-                        }
-                    }
-
-                    if (callback != null) {
-                        callback.changed(map, location1, false);
-                    }
-                });
-            }
-
-            @Override
-            public void onConnectionSuspended(int i) {
-
             }
         };
 
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(context).addConnectionCallbacks(connectionCallbacks).addApi(LocationServices.API).build();
-        }
-
-        googleApiClient.registerConnectionCallbacks(connectionCallbacks);
-
-        googleApiClient.connect();
+        fusedLocationProviderClient.requestLocationUpdates(request, locationCallback, null);
     }
 
     /**
@@ -202,9 +189,7 @@ public class MapController {
      * stop tracking my current location
      */
     public void stopTrackMyLocation() {
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     /**
@@ -1069,7 +1054,7 @@ public class MapController {
     }
 
     public interface ChangeMyLocation {
-        void changed(GoogleMap map, Location location, boolean lastLocation);
+        void changed(GoogleMap map, Location location);
     }
 
     public interface ChangePosition {
