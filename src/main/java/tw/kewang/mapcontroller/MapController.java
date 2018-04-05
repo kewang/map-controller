@@ -131,7 +131,9 @@ public class MapController {
      * @param callback
      */
     public void startTrackMyLocation(GoogleMap map, long interval, int numUpdates, TrackType type, ChangeMyLocation callback) {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+        if (fusedLocationProviderClient == null) {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+        }
 
         LocationRequest request = LocationRequest.create().setInterval(interval).setFastestInterval(16).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -190,6 +192,8 @@ public class MapController {
      */
     public void stopTrackMyLocation() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+
+        locationCallback = null;
     }
 
     /**
@@ -222,19 +226,6 @@ public class MapController {
      */
     public void animateToMyLocation() {
         animateToMyLocation(null);
-    }
-
-    /**
-     * return my current location
-     *
-     * @return
-     */
-    public Location getMyLocation() {
-        if (!map.isMyLocationEnabled()) {
-            showMyLocation();
-        }
-
-        return map.getMyLocation();
     }
 
     /**
