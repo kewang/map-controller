@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/map-controller.iml" filepath="$PROJECT_DIR$/map-controller.iml" group="map-controller" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/map-controller.iml" filepath="$PROJECT_DIR$/.idea/modules/map-controller.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/map-controller.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/map-controller.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/map-controller.main.iml" filepath="$PROJECT_DIR$/.idea/modules/map-controller.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/map-controller.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/map-controller.unitTest.iml" />
     </modules>
   </component>
 </project>

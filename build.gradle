@@ -1,32 +1,31 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 
 group="com.github.kewang"
 
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.android.tools.build:gradle:3.6.4'
     }
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.2.0'
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 34
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion 23
+        targetSdkVersion 34
         versionCode 5
         versionName "3.0.0"
     }
@@ -39,6 +38,6 @@ android {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
